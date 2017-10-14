@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
 project(piced)
 
+set(CMAKE_CXX_STANDARD 11)
+
+include(cmake/utils.cmake)
 add_subdirectory(src)
 
 # Define piced as startup project in VS
