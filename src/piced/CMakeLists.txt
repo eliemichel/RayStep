@@ -16,15 +16,29 @@ add_executable(
 	utils/fileutils.h
 	utils/fileutils.cpp
 	Future.h
-
 	MainWindow.h
 	MainWindow.ui
 	MainWindow.cpp
+	RenderWidget.h
+	RenderWidget.cpp
+
+	augen/GenericApp.h
+	augen/ResourceManager.h
+	augen/ResourceManager.cpp
+	augen/Shader.h
+	augen/Shader.cpp
+	augen/ShaderPreprocessor.h
+	augen/ShaderPreprocessor.cpp
+	augen/Actorio.h
+	augen/Actorio.cpp
+
 	main.cpp
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+target_link_libraries(piced glad)
+target_link_libraries(piced glm)
 target_link_libraries(piced upng)
 target_link_libraries(piced json)
 
