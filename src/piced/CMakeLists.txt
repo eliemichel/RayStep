@@ -1,5 +1,6 @@
 # Automatically generate moc files for Qt
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 find_package(Qt5Widgets)
 if(Qt5Widgets_FOUND)
 	message("Using Qt ${Qt5Widgets_VERSION} from ${Qt5Widgets_INCLUDE_DIRS}")
@@ -15,6 +16,10 @@ add_executable(
 	utils/fileutils.h
 	utils/fileutils.cpp
 	Future.h
+
+	MainWindow.h
+	MainWindow.ui
+	MainWindow.cpp
 	main.cpp
 )
 
