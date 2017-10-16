@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QWheelEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QTimer>
 
 RenderWidget::RenderWidget(QWidget *parent)
@@ -17,6 +18,8 @@ RenderWidget::RenderWidget(QWidget *parent)
 	connect(m_renderTimer, SIGNAL(timeout()), this, SLOT(render()));
 	m_renderTimer->start(20);
 	qDebug() << "Yo OpenGL";
+
+	setMouseTracking(true);
 }
 
 void RenderWidget::initializeGL()
@@ -46,6 +49,16 @@ void RenderWidget::paintGL()
 	m_actorio->render();
 }
 
+void RenderWidget::mouseMoveEvent(QMouseEvent *event)
+{
+	if (!m_actorio)
+		return;
+
+	QPointF p = event->localPos();
+	qDebug() << "update";
+	m_actorio->onCursorPos(static_cast<double>(p.x()), static_cast<double>(p.y()));
+}
+
 void RenderWidget::wheelEvent(QWheelEvent *event)
 {
 	if (!m_actorio)
@@ -57,8 +70,6 @@ void RenderWidget::wheelEvent(QWheelEvent *event)
 
 void RenderWidget::keyPressEvent(QKeyEvent *event)
 {
-	qDebug() << "keyPressEvent";
-
 	if (!m_actorio)
 		return;
 
@@ -67,7 +78,6 @@ void RenderWidget::keyPressEvent(QKeyEvent *event)
 	switch (event->key())
 	{
 	case Qt::Key_F5:
-		qDebug() << "keyPressEvent F5";
 		m_actorio->onKey(Actorio::ReloadShaderKey, scancode, Actorio::PressKeyAction, mod);
 		break;
 	}

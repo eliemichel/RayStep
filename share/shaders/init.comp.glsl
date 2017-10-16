@@ -6,5 +6,5 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 void main() {
     game.cameraZoom = 1.8;
-    game.cameraPosition = vec2(350.0, 2050.0);
+    game.cameraPosition = vec4(0.0);
 }

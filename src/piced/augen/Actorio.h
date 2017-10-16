@@ -6,9 +6,9 @@
 // State written and read from GPU only
 struct GameState {
 	glm::vec4 mouse;
-	glm::vec2 cameraPosition;
+	glm::vec4 cameraPosition;
 	GLfloat cameraZoom;
-	GLfloat _pad;
+	GLfloat _pad[3];
 };
 
 // State written from CPU and read from GPU

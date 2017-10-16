@@ -1,7 +1,7 @@
 
 layout(std140) uniform GameState {
     vec4 mouse;
-    vec2 cameraPosition;
+    vec4 cameraPosition;
     float cameraZoom;
-    float _pad;
+    float _pad[3];
 } game;

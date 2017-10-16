@@ -4,7 +4,7 @@ layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 #include "include/AppInfo-ubo.inc.glsl"
 #include "include/GameState-ssbo.inc.glsl"
 
-uniform float speed = 1.0;
+uniform float speed = 0.05;
 
 void main() {
     float speedModifier = 1.0 / (0.5 + game.cameraZoom);
