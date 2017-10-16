@@ -22,7 +22,6 @@ add_executable(
 	RenderWidget.h
 	RenderWidget.cpp
 
-	augen/GenericApp.h
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp
 	augen/Shader.h

@@ -1,5 +1,4 @@
 #include "Shader.h"
-#include "GenericApp.h"
 
 /// Struct shared with GLSL
 #include <glm/glm.hpp>
@@ -20,19 +19,27 @@ struct AppInfo {
 };
 
 /// Main window class
-class Actorio : public GenericApp {
+class Actorio {
+public:
+	enum Key {
+		ReloadShaderKey
+	};
+	enum KeyAction {
+		PressKeyAction,
+		ReleaseKeyAction
+	};
+
 public:
 	Actorio();
 	~Actorio();
-	void update(float time) override;
-	void render() const override;
+	void update(float time);
+	void render() const;
+	void resize(int width, int height);
 
-protected:
-	void onKey(int key, int scancode, int action, int mod) override;
-	void onCursorPos(double x, double y) override;
-	void onMouseButton(int button, int action, int mods) override;
-	void onScroll(double xoffset, double yoffset) override;
-	void onFramebufferSize(int width, int height) override;
+	void onKey(int key, int scancode, int action, int mod);
+	void onCursorPos(double x, double y);
+	void onMouseButton(int button, int action, int mods);
+	void onScroll(double xoffset, double yoffset);
 
 private:
 	void reloadShaders();

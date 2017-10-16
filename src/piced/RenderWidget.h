@@ -15,7 +15,14 @@ protected:
 	void resizeGL(int w, int h) override;
 	void paintGL() override;
 
+	void wheelEvent(QWheelEvent *event) override;
+	void keyPressEvent(QKeyEvent *event) override;
+
+private slots:
+	void render();
+
 private:
 	Actorio *m_actorio;
 	float m_time;
+	QTimer *m_renderTimer;
 };

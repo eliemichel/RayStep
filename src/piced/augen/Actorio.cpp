@@ -9,8 +9,7 @@
 #include <glm/glm.hpp>
 
 Actorio::Actorio()
-	: GenericApp()
-	, m_shader("map")
+	: m_shader("render")
 	, m_mouseMoveShader("mouse-move")
 	, m_mouseScrollShader("mouse-scroll")
 	, m_initShader("init")
@@ -75,12 +74,10 @@ void Actorio::reloadShaders() {
 }
 
 void Actorio::onKey(int key, int scancode, int action, int mod) {
-	constexpr int GLFW_PRESS = 0;
-	constexpr int GLFW_KEY_F5 = 0;
 	switch (action) {
-	case GLFW_PRESS:
+	case PressKeyAction:
 		switch (key) {
-		case GLFW_KEY_F5:
+		case ReloadShaderKey:
 			reloadShaders();
 			break;
 		}
@@ -105,7 +102,7 @@ void Actorio::onScroll(double xoffset, double yoffset) {
 	glDispatchCompute(1, 1, 1);
 }
 
-void Actorio::onFramebufferSize(int width, int height) {
+void Actorio::resize(int width, int height) {
 	glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	m_appInfo.resolution.x = static_cast<float>(width);
 	m_appInfo.resolution.y = static_cast<float>(height);

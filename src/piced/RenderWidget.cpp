@@ -4,12 +4,18 @@
 #include "augen/Actorio.h"
 
 #include <QDebug>
+#include <QWheelEvent>
+#include <QKeyEvent>
+#include <QTimer>
 
 RenderWidget::RenderWidget(QWidget *parent)
 	: QOpenGLWidget(parent)
 	, m_actorio(nullptr)
 	, m_time(0.0f)
+	, m_renderTimer(new QTimer(this))
 {
+	connect(m_renderTimer, SIGNAL(timeout()), this, SLOT(render()));
+	m_renderTimer->start(20);
 	qDebug() << "Yo OpenGL";
 }
 
@@ -36,7 +42,38 @@ void RenderWidget::paintGL()
 
 	m_time += 1.0f;
 	
-	qDebug() << "Render OpenGL view";
 	m_actorio->update(m_time);
 	m_actorio->render();
+}
+
+void RenderWidget::wheelEvent(QWheelEvent *event)
+{
+	if (!m_actorio)
+		return;
+
+	QPoint p = event->angleDelta();
+	m_actorio->onScroll(static_cast<double>(p.x()), static_cast<double>(p.y()));
+}
+
+void RenderWidget::keyPressEvent(QKeyEvent *event)
+{
+	qDebug() << "keyPressEvent";
+
+	if (!m_actorio)
+		return;
+
+	int scancode = 0; // TODO
+	int mod = 0; // TODO
+	switch (event->key())
+	{
+	case Qt::Key_F5:
+		qDebug() << "keyPressEvent F5";
+		m_actorio->onKey(Actorio::ReloadShaderKey, scancode, Actorio::PressKeyAction, mod);
+		break;
+	}
+}
+
+void RenderWidget::render()
+{
+	update();
 }
