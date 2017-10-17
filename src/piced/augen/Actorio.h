@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Camera.h"
 
 /// Struct shared with GLSL
 #include <glm/glm.hpp>
@@ -28,6 +29,13 @@ public:
 		PressKeyAction,
 		ReleaseKeyAction
 	};
+	enum Button {
+		LeftButton
+	};
+	enum ButtonAction {
+		PressButtonAction,
+		ReleaseButtonAction
+	};
 
 public:
 	Actorio();
@@ -51,4 +59,7 @@ private:
 	GLuint m_gameStateSsbo;
 	AppInfo m_appInfo;
 	GLuint m_appInfoUbo;
+	Camera m_camera;
+	float m_oldX, m_oldY;
+	bool m_isCameraRotating;
 };

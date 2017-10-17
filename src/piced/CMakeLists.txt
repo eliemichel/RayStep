@@ -30,6 +30,8 @@ add_executable(
 	augen/ShaderPreprocessor.cpp
 	augen/Actorio.h
 	augen/Actorio.cpp
+	augen/Camera.h
+	augen/Camera.cpp
 
 	main.cpp
 )

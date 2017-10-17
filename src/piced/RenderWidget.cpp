@@ -49,6 +49,24 @@ void RenderWidget::paintGL()
 	m_actorio->render();
 }
 
+void RenderWidget::mousePressEvent(QMouseEvent *event)
+{
+	if (!m_actorio)
+		return;
+
+	if (event->button() == Qt::LeftButton)
+		m_actorio->onMouseButton(Actorio::LeftButton, Actorio::PressButtonAction, 0);
+}
+
+void RenderWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+	if (!m_actorio)
+		return;
+
+	if (event->button() == Qt::LeftButton)
+		m_actorio->onMouseButton(Actorio::LeftButton, Actorio::ReleaseButtonAction, 0);
+}
+
 void RenderWidget::mouseMoveEvent(QMouseEvent *event)
 {
 	if (!m_actorio)

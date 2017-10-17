@@ -14,6 +14,7 @@ Actorio::Actorio()
 	, m_mouseScrollShader("mouse-scroll")
 	, m_initShader("init")
 	, m_updateShader("update")
+	, m_isCameraRotating(false)
 {
 	ShaderProgram::setRoot("E:/SourceCode/Piced/share/shaders");
 	
@@ -42,6 +43,7 @@ void Actorio::reloadShaders() {
 	m_shader.use();
 	m_shader.bindUniformBlock("AppInfo", m_appInfoUbo, 1);
 	m_shader.bindUniformBlock("GameState", m_gameStateSsbo, 2);  // bindUniformBlock -> const GameState method
+	m_shader.bindUniformBlock("Camera", m_camera.ubo(), 3);
 	m_shader.setUniform("iChannel1", 0);
 
 	LOG << " - mouse move";
@@ -90,10 +92,23 @@ void Actorio::onCursorPos(double x, double y) {
 	m_mouseMoveShader.setUniform("mouse", glm::vec2(x, y));
 	glDispatchCompute(1, 1, 1);
 	//glMemoryBarrier(GL_ALL_BARRIER_BITS);  // not needed
+
+	if (m_isCameraRotating)
+	{
+		float dx = x - m_oldX;
+		float dy = y - m_oldY;
+		m_camera.mouseMoveRotation(dx, dy);
+	}
+
+	m_oldX = x;
+	m_oldY = y;
 }
 
 void Actorio::onMouseButton(int button, int action, int mods) {
-
+	if (button == LeftButton)
+	{
+		m_isCameraRotating = action == PressButtonAction;
+	}
 }
 
 void Actorio::onScroll(double xoffset, double yoffset) {

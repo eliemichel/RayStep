@@ -381,7 +381,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 		// camera	
         vec3 ro = vec3( -0.5+3.5*cos(0.1*time + 6.0*mo.x), 0.75 + 2.0*mo.y, 0.5 + 4.0*sin(0.1*time + 6.0*mo.x) );
 
-        ro += game.cameraPosition.xyz;
+        //ro += game.cameraPosition.xyz;
+        ro += 3.0 * camera.viewMatrix[2].xyz;
 
         vec3 ta = vec3( -0.5, 0.75, 0.5 );
         // camera-to-world transformation
