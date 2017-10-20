@@ -73,7 +73,6 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 
 	QPointF p = event->localPos();
-	qDebug() << "update";
 	m_actorio->onCursorPos(static_cast<double>(p.x()), static_cast<double>(p.y()));
 }
 

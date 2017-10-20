@@ -185,6 +185,9 @@ float pillar(vec3 pos) {
 
 vec2 map( in vec3 pos )
 {
+	// dirty rotation
+	pos = vec3(pos.x, pos.z, -pos.y);
+
     vec2 res = opU( vec2( sdPlane(     pos), 1.0 ),
 	                vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
     res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 ) );
@@ -224,6 +227,7 @@ vec2 map( in vec3 pos )
     r2 = vec2( opS(r2.x, sdBox( pos-vec3( 0.0,0.0,3.0), vec3(0.9, 2.0, 0.9) )), 3.0 );
     
     res = opU(res, r2);
+
     return res;
 }
 
@@ -232,10 +236,10 @@ vec2 castRay( in vec3 ro, in vec3 rd )
     float tmin = 1.0;
     float tmax = 20.0;
    
-#if 1
+#if 0
     // bounding volume
-    float tp1 = (0.0-ro.y)/rd.y; if( tp1>0.0 ) tmax = min( tmax, tp1 );
-    float tp2 = (10.6-ro.y)/rd.y; if( tp2>0.0 ) { if( ro.y>10.6 ) tmin = max( tmin, tp2 );
+    float tp1 = (0.0-ro.z)/rd.z; if( tp1>0.0 ) tmax = min( tmax, tp1 );
+    float tp2 = (10.6-ro.z)/rd.z; if( tp2>0.0 ) { if( ro.z>10.6 ) tmin = max( tmin, tp2 );
                                                  else           tmax = min( tmax, tp2 ); }
 #endif
     
@@ -303,7 +307,7 @@ float calcAO( in vec3 pos, in vec3 nor )
 
 vec3 render( in vec3 ro, in vec3 rd )
 { 
-    vec3 col = vec3(0.7, 0.9, 1.0) +rd.y*0.8;
+    vec3 col = vec3(0.7, 0.9, 1.0) +rd.z*0.8;
     vec2 res = castRay(ro,rd);
     float t = res.x;
 	float m = res.y;
@@ -318,17 +322,17 @@ vec3 render( in vec3 ro, in vec3 rd )
         if( m<1.5 )
         {
             
-            float f = mod( floor(5.0*pos.z) + floor(5.0*pos.x), 2.0);
+            float f = mod( floor(5.0*pos.y) + floor(5.0*pos.x), 2.0);
             col = 0.3 + 0.1*f*vec3(1.0);
         }
 
         // lighitng        
         float occ = calcAO( pos, nor );
-		vec3  lig = normalize( vec3(-0.4, 0.7, -0.6) );
+		vec3  lig = normalize( vec3(-0.4, 0.6, 0.7) );
 		float amb = clamp( 0.5+0.5*nor.y, 0.0, 1.0 );
         float dif = clamp( dot( nor, lig ), 0.0, 1.0 );
-        float bac = clamp( dot( nor, normalize(vec3(-lig.x,0.0,-lig.z))), 0.0, 1.0 )*clamp( 1.0-pos.y,0.0,1.0);
-        float dom = smoothstep( -0.1, 0.1, ref.y );
+        float bac = clamp( dot( nor, normalize(vec3(-lig.x,0.0,-lig.z))), 0.0, 1.0 )*clamp( 1.0-pos.z,0.0,1.0);
+        float dom = smoothstep( -0.1, 0.1, ref.z );
         float fre = pow( clamp(1.0+dot(nor,rd),0.0,1.0), 2.0 );
 		float spe = pow(clamp( dot( ref, lig ), 0.0, 1.0 ),16.0);
         
@@ -350,20 +354,11 @@ vec3 render( in vec3 ro, in vec3 rd )
 	return vec3( clamp(col,0.0,1.0) );
 }
 
-mat3 setCamera( in vec3 ro, in vec3 ta, float cr )
-{
-	vec3 cw = normalize(ta-ro);
-	vec3 cp = vec3(sin(cr), cos(cr),0.0);
-	vec3 cu = normalize( cross(cw,cp) );
-	vec3 cv = normalize( cross(cu,cw) );
-    return mat3( cu, cv, cw );
-}
-
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     vec2 mo = iMouse.xy/iResolution.xy;
     mo = vec2(0.0);
-	float time = 13.0 + cos(iTime * 0.1);
+	float time = cos(iTime * 0.1);
 
     
     vec3 tot = vec3(0.0);
@@ -378,15 +373,13 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         vec2 p = (-iResolution.xy + 2.0*fragCoord)/iResolution.y;
 #endif
 
-		// camera	
-        vec3 ro = vec3( -0.5+3.5*cos(0.1*time + 6.0*mo.x), 0.75 + 2.0*mo.y, 0.5 + 4.0*sin(0.1*time + 6.0*mo.x) );
+		mat4 invViewMatrix = inverse(camera.viewMatrix);
 
-        //ro += game.cameraPosition.xyz;
-        ro += 3.0 * camera.viewMatrix[2].xyz;
+		vec3 ro = invViewMatrix[3].xyz;
+		ro = vec3(0.0, 0.0, 1.0) - 1.0 * invViewMatrix[2].xyz;
 
-        vec3 ta = vec3( -0.5, 0.75, 0.5 );
-        // camera-to-world transformation
-        mat3 ca = setCamera( ro, ta, 0.0 );
+        mat3 ca = mat3(invViewMatrix);
+
         // ray direction
         vec3 rd = ca * normalize( vec3(p.xy,2.0) );
 
