@@ -30,7 +30,10 @@ public:
 		ReleaseKeyAction
 	};
 	enum Button {
-		LeftButton
+		LeftButton,
+		MiddleButton,
+		RightButton,
+		UnknownButton
 	};
 	enum ButtonAction {
 		PressButtonAction,
@@ -60,6 +63,6 @@ private:
 	AppInfo m_appInfo;
 	GLuint m_appInfoUbo;
 	Camera m_camera;
-	float m_oldX, m_oldY;
-	bool m_isCameraRotating;
+	double m_oldX, m_oldY;
+	bool m_isCameraRotating, m_isCameraPanning;
 };

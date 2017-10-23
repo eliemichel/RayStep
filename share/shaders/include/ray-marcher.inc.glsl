@@ -188,7 +188,9 @@ vec2 map( in vec3 pos )
 	// dirty rotation
 	pos = vec3(pos.x, pos.z, -pos.y);
 
-    vec2 res = opU( vec2( sdPlane(     pos), 1.0 ),
+    vec2 grid = vec2( opS(sdPlane(     pos), sdPlane(     pos+vec3(0.0, 0.0001, 0.0))), 1.0 );
+
+    vec2 res = opU( grid,
 	                vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
     res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 ) );
     res = opU( res, vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 ) );
@@ -375,8 +377,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 		mat4 invViewMatrix = inverse(camera.viewMatrix);
 
-		vec3 ro = invViewMatrix[3].xyz;
-		ro = vec3(0.0, 0.0, 1.0) - 1.0 * invViewMatrix[2].xyz;
+		vec3 ro = -invViewMatrix[3].xyz;
 
         mat3 ca = mat3(invViewMatrix);
 

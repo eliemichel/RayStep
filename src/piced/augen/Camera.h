@@ -10,12 +10,13 @@ public:
 	Camera();
 	~Camera();
 	void mouseMoveRotation(float dx, float dy);
+	void mouseMovePanning(float dx, float dy);
 	void updateCameraViewMatrix();
 
 	inline GLuint ubo() const { return m_ubo; }
 
 private:
-	float m_sensitivity;
+	float m_sensitivity, m_panningSensitivity;
 	glm::mat4 m_viewMatrix, m_perspectiveMatrix;
 	glm::quat m_quat;
 	float m_zoom;

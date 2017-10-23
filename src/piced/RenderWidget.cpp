@@ -54,8 +54,10 @@ void RenderWidget::mousePressEvent(QMouseEvent *event)
 	if (!m_actorio)
 		return;
 
-	if (event->button() == Qt::LeftButton)
-		m_actorio->onMouseButton(Actorio::LeftButton, Actorio::PressButtonAction, 0);
+	int button = Q2AButton(event->button());
+	int mods = 0; // TODO
+
+	m_actorio->onMouseButton(button, Actorio::PressButtonAction, mods);
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -63,8 +65,10 @@ void RenderWidget::mouseReleaseEvent(QMouseEvent *event)
 	if (!m_actorio)
 		return;
 
-	if (event->button() == Qt::LeftButton)
-		m_actorio->onMouseButton(Actorio::LeftButton, Actorio::ReleaseButtonAction, 0);
+	int button = Q2AButton(event->button());
+	int mods = 0; // TODO
+
+	m_actorio->onMouseButton(button, Actorio::ReleaseButtonAction, mods);
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event)
@@ -103,4 +107,24 @@ void RenderWidget::keyPressEvent(QKeyEvent *event)
 void RenderWidget::render()
 {
 	update();
+}
+
+
+
+
+
+int RenderWidget::Q2AButton(Qt::MouseButton qButton) {
+	switch (qButton) {
+	case Qt::LeftButton:
+		return Actorio::LeftButton;
+		break;
+	case Qt::MiddleButton:
+		return Actorio::MiddleButton;
+		break;
+	case Qt::RightButton:
+		return Actorio::RightButton;
+		break;
+	default:
+		return Actorio::UnknownButton;
+	}
 }

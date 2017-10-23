@@ -25,6 +25,9 @@ private slots:
 	void render();
 
 private:
+	static int Q2AButton(Qt::MouseButton qButton);
+
+private:
 	Actorio *m_actorio;
 	float m_time;
 	QTimer *m_renderTimer;

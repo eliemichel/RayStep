@@ -15,6 +15,7 @@ Actorio::Actorio()
 	, m_initShader("init")
 	, m_updateShader("update")
 	, m_isCameraRotating(false)
+	, m_isCameraPanning(false)
 {
 	ShaderProgram::setRoot("E:/SourceCode/Piced/share/shaders");
 	
@@ -93,11 +94,14 @@ void Actorio::onCursorPos(double x, double y) {
 	glDispatchCompute(1, 1, 1);
 	//glMemoryBarrier(GL_ALL_BARRIER_BITS);  // not needed
 
-	if (m_isCameraRotating)
-	{
-		float dx = x - m_oldX;
-		float dy = y - m_oldY;
+	float dx = static_cast<float>(x - m_oldX);
+	float dy = static_cast<float>(y - m_oldY);
+
+	if (m_isCameraRotating) {
 		m_camera.mouseMoveRotation(dx, dy);
+	}
+	if (m_isCameraPanning) {
+		m_camera.mouseMovePanning(dx, dy);
 	}
 
 	m_oldX = x;
@@ -105,9 +109,14 @@ void Actorio::onCursorPos(double x, double y) {
 }
 
 void Actorio::onMouseButton(int button, int action, int mods) {
-	if (button == LeftButton)
-	{
+	switch (button) {
+	case LeftButton:
 		m_isCameraRotating = action == PressButtonAction;
+		break;
+
+	case MiddleButton:
+		m_isCameraPanning = action == PressButtonAction;
+		break;
 	}
 }
 
