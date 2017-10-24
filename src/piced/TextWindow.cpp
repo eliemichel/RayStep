@@ -1,6 +1,8 @@
 #include "TextWindow.h"
 #include "ui_TextWindow.h"
 
+#include "SceneTreeModel.h"
+
 #include <QFile>
 #include <QMessageBox>
 #include <QDebug>
@@ -10,6 +12,9 @@ TextWindow::TextWindow(QWidget *parent)
 	, ui(new Ui::TextWindow)
 {
 	ui->setupUi(this);
+
+	m_model = new SceneTreeModel;
+	ui->outliner->setModel(m_model);
 
 	connect(ui->submitButton, SIGNAL(clicked()), this, SIGNAL(submitted()));
 }

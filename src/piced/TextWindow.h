@@ -2,6 +2,8 @@
 
 #include <QWidget>
 
+class SceneTreeModel;
+
 namespace Ui {
 	class TextWindow;
 }
@@ -25,5 +27,6 @@ signals:
 
 private:
 	Ui::TextWindow *ui;
+	SceneTreeModel *m_model;
 };
 

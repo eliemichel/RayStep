@@ -27,6 +27,8 @@ add_executable(
 	TextWindow.cpp
 	RenderWidget.h
 	RenderWidget.cpp
+	SceneTreeModel.h
+	SceneTreeModel.cpp
 
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp
