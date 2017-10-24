@@ -103,14 +103,14 @@ void ShaderProgram::load() {
 	m_shaders.reserve(3);
 
 	std::unique_ptr<Shader> vertexShader(new Shader(GL_VERTEX_SHADER));
-	vertexShader->load(fixPath(joinPath(s_root, m_shaderName + ".vert.glsl")), defines);
+	vertexShader->load(fixPath(joinPath(s_root, m_shaderName + ".vert.glsl")), defines, m_snippets);
     vertexShader->compile();
     vertexShader->check("vertex shader");
 	glAttachShader(m_programId, vertexShader->shaderId());
 	m_shaders.push_back(std::move(vertexShader));
 
 	std::unique_ptr<Shader> geometryShader(new Shader(GL_GEOMETRY_SHADER));
-	if (geometryShader->load(fixPath(joinPath(s_root, m_shaderName + ".geo.glsl")), defines)) {
+	if (geometryShader->load(fixPath(joinPath(s_root, m_shaderName + ".geo.glsl")), defines, m_snippets)) {
 		geometryShader->compile();	
 		geometryShader->check("geometry shader");
 		glAttachShader(m_programId, geometryShader->shaderId());
@@ -118,7 +118,7 @@ void ShaderProgram::load() {
 	}
 
 	std::unique_ptr<Shader> fragmentShader(new Shader(GL_FRAGMENT_SHADER));
-	fragmentShader->load(fixPath(joinPath(s_root, m_shaderName + ".frag.glsl")), defines);
+	fragmentShader->load(fixPath(joinPath(s_root, m_shaderName + ".frag.glsl")), defines, m_snippets);
     fragmentShader->compile();
     fragmentShader->check("fragment shader");
 	glAttachShader(m_programId, fragmentShader->shaderId());
@@ -138,7 +138,7 @@ void ShaderProgram::loadCompute() {
 	m_shaders.reserve(1);
 
 	std::unique_ptr<Shader> computeShader(new Shader(GL_COMPUTE_SHADER));
-	computeShader->load(fixPath(joinPath(s_root, m_shaderName + ".comp.glsl")), defines);
+	computeShader->load(fixPath(joinPath(s_root, m_shaderName + ".comp.glsl")), defines, m_snippets);
 	computeShader->compile();
 	computeShader->check("compute shader");
 	glAttachShader(m_programId, computeShader->shaderId());

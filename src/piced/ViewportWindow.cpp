@@ -13,3 +13,8 @@ ViewportWindow::ViewportWindow(QWidget *parent)
 ViewportWindow::~ViewportWindow()
 {
 }
+
+Actorio *ViewportWindow::actorio() const
+{
+	return ui->render->actorio();
+}

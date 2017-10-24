@@ -191,8 +191,8 @@ vec2 map( in vec3 pos )
     vec2 grid = vec2( opS(sdPlane(     pos), sdPlane(     pos+vec3(0.0, 0.0001, 0.0))), 1.0 );
     vec2 scene = grid;
 
-//#include "sys:piced-scene"
-#include "include/default-scene.inc.glsl"
+#include "sys:piced-scene"
+//#include "include/default-scene.inc.glsl"
 
     return scene;
 }

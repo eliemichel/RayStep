@@ -87,12 +87,12 @@ bool ShaderPreprocessor::loadShaderSourceAux(const string & filename, const vect
 	static const string systemPrefix = "sys:";
 	static const string sysDefinesFilename = "defines";
 
-	lines_accumulator.push_back(string() + BEGIN_INCLUDE_TOKEN + " " + filename);
+	string shortName = shortFileName(filename);
+	if (startsWith(shortName, systemPrefix)) {
+		lines_accumulator.push_back(string() + BEGIN_INCLUDE_TOKEN + " " + shortName);
 
-	if (startsWith(filename, systemPrefix)) {
-		const string key = filename.substr(systemPrefix.length());
+		const string key = shortName.substr(systemPrefix.length());
 		if (key == sysDefinesFilename) {
-			
 			for (auto def : defines) {
 				lines_accumulator.push_back(defineKeywordLower + " " + def);
 			}
@@ -103,9 +103,11 @@ bool ShaderPreprocessor::loadShaderSourceAux(const string & filename, const vect
 			}
 		}
 
-		lines_accumulator.push_back(string() + END_INCLUDE_TOKEN + " " + filename);
+		lines_accumulator.push_back(string() + END_INCLUDE_TOKEN);
 		return true;
 	}
+
+	lines_accumulator.push_back(string() + BEGIN_INCLUDE_TOKEN + " " + filename);
 
 	ifstream in(filename);
 	if (!in.is_open()) {

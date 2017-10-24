@@ -81,7 +81,7 @@ public:
 	inline void define(const std::string & def) { m_defines.insert(def); }
 	inline void undefine(const std::string & def) { m_defines.erase(def); }
 
-	inline void setSnippet(const std::string & key, const std::string & value) { m_snippets.insert_or_assign(key, value); }
+	inline void setSnippet(const std::string & key, const std::string & value) { m_snippets[key] = value; }
 
     /**
      * Load and check shaders

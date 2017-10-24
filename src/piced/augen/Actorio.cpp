@@ -155,3 +155,8 @@ void Actorio::render() const {
 	glDrawArrays(GL_POINTS, 0, 1);
 	glBindVertexArray(0);
 }
+
+void Actorio::updateShader(std::string renderSnippet) {
+	m_shader.setSnippet("piced-scene", renderSnippet);
+	reloadShaders();
+}

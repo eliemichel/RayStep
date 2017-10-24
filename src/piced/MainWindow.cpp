@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "augen/Actorio.h"
+
 #include <QFileDialog>
 #include <QDebug>
 
@@ -35,4 +37,8 @@ void MainWindow::showOpenFileDialog()
 void MainWindow::updateShader()
 {
 	qDebug() << "Update shader: " << ui->text->content();
+	Actorio *actorio = ui->viewport->actorio();
+	if (actorio) {
+		actorio->updateShader(ui->text->content().toStdString());
+	}
 }

@@ -10,6 +10,8 @@ class RenderWidget : public QOpenGLWidget
 public:
 	explicit RenderWidget(QWidget *parent = 0);
 
+	inline Actorio *actorio() const { return m_actorio; }
+
 protected:
 	void initializeGL() override;
 	void resizeGL(int w, int h) override;
