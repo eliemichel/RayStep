@@ -29,6 +29,7 @@ add_executable(
 	RenderWidget.cpp
 	SceneTreeModel.h
 	SceneTreeModel.cpp
+	SceneGraph.h
 
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp

@@ -2,6 +2,8 @@
 
 #include <QAbstractItemModel>
 
+class SceneTree;
+
 class SceneTreeModel : public QAbstractItemModel
 {
 	Q_OBJECT
@@ -17,5 +19,11 @@ public:
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
+	SceneTree *sceneTreeAt(const QModelIndex &index) const;
+
+private:
 	static bool isRoot(const QModelIndex &indext);
+
+private:
+	SceneTree *m_dataTree;
 };

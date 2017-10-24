@@ -15,6 +15,7 @@ TextWindow::TextWindow(QWidget *parent)
 
 	m_model = new SceneTreeModel;
 	ui->outliner->setModel(m_model);
+	ui->outliner->expandAll();
 
 	connect(ui->submitButton, SIGNAL(clicked()), this, SIGNAL(submitted()));
 }
