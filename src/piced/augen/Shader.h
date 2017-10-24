@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <map>
 #include <set>
 #include <memory>
 
@@ -29,7 +30,7 @@ public:
      * Load file into the shader
      * @param filename Shader file
      */
-    bool load(const std::string &filename, const std::vector<std::string> & defines = {});
+    bool load(const std::string &filename, const std::vector<std::string> & defines = {}, const std::map<std::string, std::string> & snippets = {});
 
     /**
      * Compile the shader
@@ -80,6 +81,8 @@ public:
 	inline void define(const std::string & def) { m_defines.insert(def); }
 	inline void undefine(const std::string & def) { m_defines.erase(def); }
 
+	inline void setSnippet(const std::string & key, const std::string & value) { m_snippets.insert_or_assign(key, value); }
+
     /**
      * Load and check shaders
      */
@@ -115,6 +118,7 @@ public:
 private:
 	std::string m_shaderName;
 	std::set<std::string> m_defines;
+	std::map<std::string, std::string> m_snippets;
 	std::vector<std::unique_ptr<Shader>> m_shaders;
     GLuint m_programId;
 	bool m_isValid;

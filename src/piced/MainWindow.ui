@@ -6,95 +6,42 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>957</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Piced</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="leftMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <item>
-     <widget class="QWidget" name="toolBar" native="true">
-      <property name="maximumSize">
-       <size>
-        <width>60</width>
-        <height>16777215</height>
-       </size>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="spacing">
-        <number>2</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QPushButton" name="Translate">
-         <property name="text">
-          <string>Translate</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="Rotate">
-         <property name="text">
-          <string>Rotate</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>502</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="RenderWidget" name="render">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::ClickFocus</enum>
-      </property>
+      <widget class="ViewportWindow" name="viewport" native="true">
+       <zorder>text</zorder>
+      </widget>
+      <widget class="TextWindow" name="text" native="true"/>
      </widget>
     </item>
    </layout>
@@ -104,7 +51,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>957</width>
      <height>21</height>
     </rect>
    </property>
@@ -156,9 +103,16 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>RenderWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header>RenderWidget.h</header>
+   <class>ViewportWindow</class>
+   <extends>QWidget</extends>
+   <header>ViewportWindow.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TextWindow</class>
+   <extends>QWidget</extends>
+   <header>TextWindow.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

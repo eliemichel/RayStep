@@ -124,6 +124,8 @@ void Actorio::onScroll(double xoffset, double yoffset) {
 	m_mouseScrollShader.use();
 	m_mouseScrollShader.setUniform("scroll", glm::vec2(xoffset, yoffset));
 	glDispatchCompute(1, 1, 1);
+
+	m_camera.mouseScroll(static_cast<float>(xoffset), static_cast<float>(yoffset));
 }
 
 void Actorio::resize(int width, int height) {

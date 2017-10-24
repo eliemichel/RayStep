@@ -9,6 +9,7 @@
 Camera::Camera()
 	: m_sensitivity(0.003f)
 	, m_panningSensitivity(0.01f)
+	, m_zoomSensitivity(0.001f)
 	, m_viewMatrix(1.f)
 	, m_zoom(5.f)
 	, m_center(0.f)
@@ -44,13 +45,19 @@ void Camera::mouseMoveRotation(float dx, float dy)
 
 void Camera::mouseMovePanning(float dx, float dy)
 {
-	qDebug() << "mouseMovePanning";
-
 	// rotate around camera X axis by dy
 	glm::vec3 xAxis = glm::vec3(glm::row(m_viewMatrix, 0));
 	glm::vec3 yAxis = glm::vec3(glm::row(m_viewMatrix, 1));
 
 	m_center += -dx * m_panningSensitivity * xAxis + dy * m_panningSensitivity * yAxis;
+
+	updateCameraViewMatrix();
+}
+
+void Camera::mouseScroll(float dx, float dy)
+{
+	m_zoom *= (1.f - dy * m_zoomSensitivity);
+	m_zoom = std::max(m_zoom, 0.0001f);
 
 	updateCameraViewMatrix();
 }

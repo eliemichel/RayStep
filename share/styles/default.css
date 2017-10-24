@@ -1,0 +1,21 @@
+* {
+	background-color: rgb(114, 114, 114);
+	border-top-color: rgb(122, 122, 122);
+	border-left-color: rgb(122, 122, 122);
+	border-bottom-color: rgb(92, 92, 92);
+	border-right-color: rgb(92, 92, 92);
+	color: rgb(0, 0, 0);
+}
+
+QPlainTextEdit {
+	background-color: rgb(164, 164, 164);
+}
+
+QPushButton {
+	background-color: qlineargradient(spread: pad, x1 : 0, y1 : 0, x2 : 0, y2 : 1, stop: 0 rgba(164, 164, 164, 255), stop: 1 rgba(138, 138, 138, 255));
+	border-style: outset;
+	border-width: 1px;
+	border-radius: 5px;
+	border-color: rgb(57, 57, 57);
+	padding: 4px;
+}

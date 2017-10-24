@@ -8,7 +8,7 @@ layout (location = 0) out vec4 color;
 
 vec2 iMouse = game.cameraPosition.xy;
 uniform sampler2D iChannel1;
-#include "include/ray-marcher.inc.glsl"
+#include "include/templated-ray-marcher.inc.glsl"
 
 void main() {
     vec2 uv = gl_FragCoord.xy / iResolution.xy;

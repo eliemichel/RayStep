@@ -29,10 +29,10 @@ Shader::~Shader() {
     glDeleteShader(m_shaderId);
 }
 
-bool Shader::load(const string &filename, const vector<string> & defines) {
+bool Shader::load(const string &filename, const vector<string> & defines, const std::map<std::string, std::string> & snippets) {
 	ShaderPreprocessor preprocessor;
 
-	if (!preprocessor.load(filename, defines)) {
+	if (!preprocessor.load(filename, defines, snippets)) {
 		return false;
 	}
 

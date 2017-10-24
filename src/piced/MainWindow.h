@@ -17,6 +17,7 @@ public:
 
 private slots:
 	void showOpenFileDialog();
+	void updateShader();
 
 private:
 	Ui::MainWindow *ui;

@@ -17,8 +17,8 @@ using namespace std;
 constexpr char* BEGIN_INCLUDE_TOKEN = "// _AUGEN_BEGIN_INCLUDE";
 constexpr char* END_INCLUDE_TOKEN = "// _AUGEN_END_INCLUDE";
 
-bool ShaderPreprocessor::load(const string & filename, const vector<string> & defines) {
-	return loadShaderSourceAux(filename, defines, m_lines);
+bool ShaderPreprocessor::load(const string & filename, const vector<string> & defines, const std::map<std::string, std::string> & snippets) {
+	return loadShaderSourceAux(filename, defines, snippets, m_lines);
 }
 
 void ShaderPreprocessor::source(vector<GLchar> & buf) const {
@@ -81,21 +81,31 @@ void ShaderPreprocessor::logTraceback(size_t line) const {
 
 
 // Note: no include loop check is done, beware of infinite loops
-bool ShaderPreprocessor::loadShaderSourceAux(const string & filename, const vector<string> & defines, vector<string> & lines_accumulator) {
+bool ShaderPreprocessor::loadShaderSourceAux(const string & filename, const vector<string> & defines, const std::map<std::string, std::string> & snippets, vector<string> & lines_accumulator) {
 	static const string includeKeywordLower = "#include";
 	static const string defineKeywordLower = "#define";
-	static const string systemFilename = "sys:defines";
-
-	if (endsWith(filename, systemFilename)) {
-		lines_accumulator.push_back(string() + BEGIN_INCLUDE_TOKEN + " " + systemFilename);
-		for (auto def : defines) {
-			lines_accumulator.push_back(defineKeywordLower + " " + def);
-		}
-		lines_accumulator.push_back(string() + END_INCLUDE_TOKEN + " " + systemFilename);
-		return true;
-	}
+	static const string systemPrefix = "sys:";
+	static const string sysDefinesFilename = "defines";
 
 	lines_accumulator.push_back(string() + BEGIN_INCLUDE_TOKEN + " " + filename);
+
+	if (startsWith(filename, systemPrefix)) {
+		const string key = filename.substr(systemPrefix.length());
+		if (key == sysDefinesFilename) {
+			
+			for (auto def : defines) {
+				lines_accumulator.push_back(defineKeywordLower + " " + def);
+			}
+		}
+		else {
+			if (snippets.count(key) > 0) {
+				lines_accumulator.push_back(snippets.at(key));
+			}
+		}
+
+		lines_accumulator.push_back(string() + END_INCLUDE_TOKEN + " " + filename);
+		return true;
+	}
 
 	ifstream in(filename);
 	if (!in.is_open()) {
@@ -119,7 +129,7 @@ bool ShaderPreprocessor::loadShaderSourceAux(const string & filename, const vect
 			}
 			includeFilename = includeFilename.substr(1, includeFilename.size() - 2);
 			string fullIncludeFilename = joinPath(baseDir(filename), includeFilename);
-			if (!loadShaderSourceAux(fullIncludeFilename, defines, lines_accumulator)) {
+			if (!loadShaderSourceAux(fullIncludeFilename, defines, snippets, lines_accumulator)) {
 				ERR_LOG << "Include error at line " << i << " in file " << filename;
 				return false;
 			}

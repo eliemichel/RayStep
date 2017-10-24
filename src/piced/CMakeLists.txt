@@ -19,6 +19,12 @@ add_executable(
 	MainWindow.h
 	MainWindow.ui
 	MainWindow.cpp
+	ViewportWindow.h
+	ViewportWindow.ui
+	ViewportWindow.cpp
+	TextWindow.h
+	TextWindow.ui
+	TextWindow.cpp
 	RenderWidget.h
 	RenderWidget.cpp
 
