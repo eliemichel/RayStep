@@ -43,8 +43,8 @@ public:
 
 	/// NodeType must be a subclass of SceneTree
 	template <typename NodeType>
-	inline void addChild() { m_children.push_back(new NodeType(this)); }
-	inline void addChild() { m_children.push_back(new SceneTree(this)); }
+	inline NodeType * addChild() { NodeType *node = new NodeType(this); m_children.push_back(node); return node; }
+	inline SceneTree * addChild() { SceneTree *node = new SceneTree(this); m_children.push_back(node); return node; }
 
 	/// @param target: Name of the glsl variable in which storing the value
 	/// leave empty to inline the expression

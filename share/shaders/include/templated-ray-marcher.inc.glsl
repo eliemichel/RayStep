@@ -158,6 +158,11 @@ vec2 opU( vec2 d1, vec2 d2 )
 	return (d1.x<d2.x) ? d1 : d2;
 }
 
+vec2 opD( vec2 d1, vec2 d2 )
+{
+    return vec2(max(-d2.x, d1.x), d1.y);
+}
+
 vec3 opRep( vec3 p, vec3 c )
 {
     return mod(p,c)-0.5*c;

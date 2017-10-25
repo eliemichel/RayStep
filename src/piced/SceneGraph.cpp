@@ -19,7 +19,6 @@ SceneTree::~SceneTree()
 
 std::string SceneTree::compileToGlsl(std::string target) const
 {
-	DEBUG_LOG << "toGLSL: " << target << ", " << name();
 	if (isRoot())
 	{
 		// TODO: clean up
@@ -59,8 +58,15 @@ std::string SceneOperationNode::compileToGlsl(std::string target) const
 		return target.empty() ? glsl : ("vec2 " + target + " = " + glsl + ";");
 	}
 	case DifferenceOp:
-		ERR_LOG << "Difference Operator Node not implemented";
-		return "";
+	{
+		std::string glsl = "";
+		for (size_t i = 0; i < childCount(); ++i)
+		{
+			std::string childGlsl = child(i)->compileToGlsl();
+			glsl = i == 0 ? childGlsl : ("opD(" + glsl + ", " + childGlsl + ")");
+		}
+		return target.empty() ? glsl : ("vec2 " + target + " = " + glsl + ";");
+	}
 	case IntersectionOp:
 		ERR_LOG << "Intersection Operator Node not implemented";
 		return "";

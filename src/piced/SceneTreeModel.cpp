@@ -11,19 +11,33 @@ SceneTreeModel::SceneTreeModel(SceneTree *scene, QObject *parent)
 {
 	// mock data
 	m_dataTree = scene;
-	m_dataTree->addChild<SceneOperationNode>();
-	SceneOperationNode *t = static_cast<SceneOperationNode*>(m_dataTree->child(0));
+	SceneOperationNode *t = m_dataTree->addChild<SceneOperationNode>();
 	t->setName("Union");
 	t->setOperation(SceneOperationNode::UnionOp);
-	t->addChild<ScenePrimitiveNode>();
-	t->addChild<ScenePrimitiveNode>();
-	t->addChild<ScenePrimitiveNode>();
-	t->child(0)->setName("sdSphere");
-	static_cast<ScenePrimitiveNode*>(t->child(0))->setSource("vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 )");
-	t->child(1)->setName("sdBox");
-	static_cast<ScenePrimitiveNode*>(t->child(1))->setSource("vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 )");
-	t->child(2)->setName("udRoundBox");
-	static_cast<ScenePrimitiveNode*>(t->child(2))->setSource("vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 )");
+
+	ScenePrimitiveNode *prim;
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdSphere");
+	prim->setSource("vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdBox");
+	prim->setSource("vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("udRoundBox");
+	prim->setSource("vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 )");
+
+	SceneOperationNode *dif = t->addChild<SceneOperationNode>();
+	dif->setName("Difference");
+	dif->setOperation(SceneOperationNode::DifferenceOp);
+	
+	prim = dif->addChild<ScenePrimitiveNode>();
+	prim->setName("sdBox2");
+	prim->setSource("vec2( sdBox(    pos-vec3( 0.0,0.25, 1.0), vec3(0.25) ), 15.0 )");
+
+	prim = dif->addChild<ScenePrimitiveNode>();
+	prim->setName("sdBigSphere");
+	prim->setSource("vec2( sdSphere(       pos-vec3( 0.5,0.5, 0.5), 0.75 ), 3.0 )");
+	
 }
 
 SceneTreeModel::~SceneTreeModel()
