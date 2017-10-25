@@ -9,7 +9,7 @@ class SceneTreeModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
-	explicit SceneTreeModel(QObject *parent = Q_NULLPTR);
+	explicit SceneTreeModel(SceneTree *scene, QObject *parent = Q_NULLPTR);
 	~SceneTreeModel();
 
 	QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;

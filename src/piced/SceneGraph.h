@@ -17,7 +17,10 @@ public:
 	{}
 
 	inline SceneTree *parent() const { return m_parent; }
+
 	inline SceneNodeType type() const { return m_type; }
+	inline void setType(SceneNodeType type) { m_type = type; }
+
 	inline size_t childCount() const { return m_children.size(); }
 	inline SceneTree *child(size_t index) { return &m_children.at(index); }
 
@@ -26,7 +29,12 @@ public:
 
 	inline bool isRoot() const { return m_parent == nullptr; }
 
-	void addChild() { m_children.push_back(SceneTree(this)); }
+	inline void addChild() { m_children.push_back(SceneTree(this)); }
+
+	/// @param target: Name of the glsl variable in which storing the value
+	/// leave empty to inline the expression
+	/// (not injection safe, do not expose to user raw input)
+	std::string compileToGlsl(std::string target = "") const;
 
 private:
 	SceneTree *m_parent;

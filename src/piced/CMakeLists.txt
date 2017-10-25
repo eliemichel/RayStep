@@ -30,6 +30,7 @@ add_executable(
 	SceneTreeModel.h
 	SceneTreeModel.cpp
 	SceneGraph.h
+	SceneGraph.cpp
 
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp

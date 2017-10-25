@@ -1,6 +1,7 @@
 #include "TextWindow.h"
 #include "ui_TextWindow.h"
 
+#include "SceneGraph.h"
 #include "SceneTreeModel.h"
 
 #include <QFile>
@@ -13,7 +14,8 @@ TextWindow::TextWindow(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	m_model = new SceneTreeModel;
+	m_scene = new SceneTree;
+	m_model = new SceneTreeModel(m_scene);
 	ui->outliner->setModel(m_model);
 	ui->outliner->expandAll();
 
@@ -40,5 +42,6 @@ void TextWindow::load(const QString & filename)
 
 QString TextWindow::content() const
 {
-	return ui->shaderEdit->toPlainText();
+	return QString::fromStdString(m_scene->compileToGlsl("scene"));
+	//return ui->shaderEdit->toPlainText();
 }
