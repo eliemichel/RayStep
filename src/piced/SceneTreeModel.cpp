@@ -111,7 +111,7 @@ int SceneTreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 {
-	if (role == Qt::DisplayRole)
+	if (role == Qt::DisplayRole || role == Qt::EditRole)
 	{
 		SceneTree *tree = sceneTreeAt(index);
 		if (!tree)
@@ -121,4 +121,38 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 		return QString::fromStdString(tree->name());
 	}
 	return QVariant();
+}
+
+Qt::ItemFlags SceneTreeModel::flags(const QModelIndex &index) const
+{
+	Qt::ItemFlags f = QAbstractItemModel::flags(index);
+	if (!isRoot(index))
+	{
+		f = f
+			| Qt::ItemIsSelectable
+			| Qt::ItemIsEditable
+			| Qt::ItemIsDragEnabled
+			| Qt::ItemIsDropEnabled;
+	}
+	return f;
+}
+
+bool SceneTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+	if (role == Qt::EditRole)
+	{
+		SceneTree *tree = sceneTreeAt(index);
+		if (!tree)
+		{
+			return false;
+		}
+		if (!value.canConvert<QString>())
+		{
+			return false;
+		}
+		tree->setName(value.toString().toStdString());
+		emit dataChanged(index, index);
+		return true;
+	}
+	return false;
 }
