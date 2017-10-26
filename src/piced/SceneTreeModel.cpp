@@ -150,9 +150,18 @@ bool SceneTreeModel::setData(const QModelIndex &index, const QVariant &value, in
 		{
 			return false;
 		}
+		// TODO avoid sibling with the same name
 		tree->setName(value.toString().toStdString());
 		emit dataChanged(index, index);
 		return true;
 	}
 	return false;
+}
+
+QVariant SceneTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if (role == Qt::DisplayRole && section == 0) {
+		return QString("Outliner");
+	}
+	return QVariant();
 }
