@@ -37,6 +37,8 @@ SceneTreeModel::SceneTreeModel(SceneTree *scene, QObject *parent)
 	prim = dif->addChild<ScenePrimitiveNode>();
 	prim->setName("sdBigSphere");
 	prim->setSource("vec2( sdSphere(       pos-vec3( 0.5,0.5, 0.5), 0.75 ), 3.0 )");
+
+
 	
 }
 
@@ -70,6 +72,7 @@ QModelIndex SceneTreeModel::index(int row, int column, const QModelIndex &parent
 
 	if (row >= 0 && row < tree->childCount())
 	{
+		//DEBUG_LOG << "Index(" << row << ", " << column << ", " << tree->child(row) << ")";
 		return createIndex(row, column, tree->child(row));
 	}
 	return QModelIndex();
@@ -123,6 +126,14 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 	return QVariant();
 }
 
+QVariant SceneTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if (role == Qt::DisplayRole && section == 0) {
+		return QString("Outliner");
+	}
+	return QVariant();
+}
+
 Qt::ItemFlags SceneTreeModel::flags(const QModelIndex &index) const
 {
 	Qt::ItemFlags f = QAbstractItemModel::flags(index);
@@ -158,10 +169,100 @@ bool SceneTreeModel::setData(const QModelIndex &index, const QVariant &value, in
 	return false;
 }
 
-QVariant SceneTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
+bool SceneTreeModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-	if (role == Qt::DisplayRole && section == 0) {
-		return QString("Outliner");
+	SceneTree *tree = sceneTreeAt(parent);
+	if (!tree)
+	{
+		return false;
 	}
-	return QVariant();
+	if (row < 0 || row > tree->childCount())
+	{
+		return false;
+	}
+
+	beginInsertRows(parent, row, row + count);
+	DEBUG_LOG << "Insert " << count << " rows into " << tree->internalPath() << " at " << row;
+	for (size_t i = 0; i < count; ++i)
+	{
+		SceneTree *child = tree->addChild(row);
+		std::ostringstream ss;
+		ss << "child #" << i;
+		child->setName(ss.str());
+	}
+	endInsertRows();
+	return true;
+}
+
+bool SceneTreeModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+	SceneTree *tree = sceneTreeAt(parent);
+	if (!tree)
+	{
+		return false;
+	}
+	if (row < 0 || row + count >= tree->childCount())
+	{
+		return false;
+	}
+
+	beginRemoveRows(parent, row, row + count);
+	DEBUG_LOG << "Remove " << count << " rows from " << tree->internalPath() << " at " << row;
+	for (size_t i = 0; i < count; ++i)
+	{
+		tree->removeChild(row);
+	}
+	endRemoveRows();
+	return true;
+}
+
+bool SceneTreeModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild)
+{
+	SceneTree *sourceTree = sceneTreeAt(sourceParent);
+	SceneTree *destinationTree = sceneTreeAt(destinationParent);
+	if (!sourceTree || !destinationTree)
+	{
+		return false;
+	}
+	if (sourceRow < 0 || sourceRow + count >= sourceTree->childCount())
+	{
+		return false;
+	}
+	if (destinationChild < 0 || destinationChild >= destinationTree->childCount())
+	{
+		return false;
+	}
+
+	beginMoveRows(sourceParent, sourceRow, sourceRow + count, destinationParent, destinationChild);
+	sourceTree->child(sourceRow);
+	for (size_t i = 0; i < count; ++i)
+	{
+		DEBUG_LOG << "Move " << count << " items from " << sourceTree->internalPath() << " at " << sourceRow << " toward " << destinationTree->internalPath() << " at " << destinationChild;
+		SceneTree * node = sourceTree->takeChild(sourceRow);
+		destinationTree->addChild(node, destinationChild);
+	}
+	endMoveRows();
+	return true;
+}
+
+bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+	if (action == Qt::MoveAction)
+	{
+		SceneTree *tree = sceneTreeAt(parent);
+		if (!tree)
+		{
+			return false;
+		}
+
+		//tree->addChild
+
+		//return true;
+	}
+	return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
+}
+
+Qt::DropActions SceneTreeModel::supportedDropActions() const
+{
+	return Qt::MoveAction;
 }

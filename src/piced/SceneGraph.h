@@ -1,4 +1,5 @@
-#pragma once
+#ifndef H_SCENEGRAPH
+#define H_SCENEGRAPH
 
 #include <string>
 #include <vector>
@@ -40,11 +41,22 @@ public:
 	inline void setName(const std::string & name) { m_name = name; }
 
 	inline bool isRoot() const { return m_parent == nullptr; }
+	inline std::string internalPath() const { return isRoot() ? "/" : parent()->internalPath() + "/" + name(); }
 
+	/// Add an existing node
+	/// The node is then managed and will be freed by the new parent SceneTree
+	/// Insert child before index beforeIndex, except if the latter is negative
+	void addChild(SceneTree *node, int beforeIndex = -1);
+	/// Add a new node and return a pointer to it
 	/// NodeType must be a subclass of SceneTree
 	template <typename NodeType>
-	inline NodeType * addChild() { NodeType *node = new NodeType(this); m_children.push_back(node); return node; }
-	inline SceneTree * addChild() { SceneTree *node = new SceneTree(this); m_children.push_back(node); return node; }
+	inline NodeType * addChild(int beforeIndex = -1) { NodeType *node = new NodeType(this); addChild(node, beforeIndex); return node; }
+	inline SceneTree * addChild(int beforeIndex = -1) { return addChild<SceneTree>(beforeIndex); }
+
+	// Free and remove child
+	void removeChild(int childIndex);
+	// Remove child from children list without deleting it, returns a pointer to it
+	SceneTree *takeChild(int childIndex);
 
 	/// @param target: Name of the glsl variable in which storing the value
 	/// leave empty to inline the expression
@@ -55,6 +67,9 @@ public:
 	/// Typically, this is 0 for primitives and 1 for unary operators
 	/// Leave it to -1 to mean unlimited
 	virtual int maxChildren() const { return -1; }
+
+private:
+	inline void setParent(SceneTree *parent){ m_parent = parent; }
 
 private:
 	SceneTree *m_parent;
@@ -74,7 +89,7 @@ public:
 		IntersectionOp
 	};
 public:
-	SceneOperationNode(SceneTree *parent = nullptr) : SceneTree(parent) { setType(OperationNode); }
+	SceneOperationNode(SceneTree *parent = nullptr) : SceneTree(parent) { setType(OperationNode); setName("<operation>"); }
 
 	inline OperationType operation() const { return m_op; }
 	inline void setOperation(OperationType op) { m_op = op; }
@@ -91,7 +106,7 @@ private:
 class ScenePrimitiveNode : public SceneTree
 {
 public:
-	ScenePrimitiveNode(SceneTree *parent = nullptr) : SceneTree(parent) { setType(PrimitiveNode); }
+	ScenePrimitiveNode(SceneTree *parent = nullptr) : SceneTree(parent) { setType(PrimitiveNode); setName("<primitive>"); }
 
 	inline std::string source() const { return m_source; }
 	inline void setSource(const std::string & source) { m_source = source; }
@@ -104,3 +119,4 @@ private:
 	std::string m_source;
 };
 
+#endif // H_SCENEGRAPH

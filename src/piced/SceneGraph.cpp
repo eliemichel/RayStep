@@ -4,6 +4,7 @@
 
 SceneTree::SceneTree(SceneTree *parent)
 	: m_parent(parent)
+	, m_name("<node>")
 {
 
 }
@@ -15,6 +16,33 @@ SceneTree::~SceneTree()
 		delete m_children.back();
 		m_children.pop_back();
 	}
+}
+
+void SceneTree::addChild(SceneTree *node, int beforeIndex)
+{
+	node->setParent(this);
+	if (beforeIndex < 0 || beforeIndex >= m_children.size())
+	{
+		m_children.push_back(node);
+	}
+	else
+	{
+		m_children.insert(m_children.begin() + beforeIndex, node);
+	}
+}
+
+void SceneTree::removeChild(int childIndex)
+{
+	delete m_children[childIndex];
+	m_children.erase(m_children.begin() + childIndex);
+}
+
+SceneTree *SceneTree::takeChild(int childIndex)
+{
+	SceneTree * node = m_children[childIndex];
+	m_children.erase(m_children.begin() + childIndex);
+	node->setParent(nullptr);
+	return node;
 }
 
 std::string SceneTree::compileToGlsl(std::string target) const
