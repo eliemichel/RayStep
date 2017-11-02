@@ -31,6 +31,8 @@ public:
 	bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild) override;
 
 	// Drag and Drop
+	QStringList mimeTypes() const override;
+	QMimeData *mimeData(const QModelIndexList &indexes) const override;
 	bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 	Qt::DropActions supportedDropActions() const override;
 
@@ -39,6 +41,7 @@ private:
 
 private:
 	static bool isRoot(const QModelIndex &indext);
+	constexpr static char* itemArrayMimeType = "application/x-piced-scene-tree-item-array";
 
 private:
 	SceneTree *m_dataTree;

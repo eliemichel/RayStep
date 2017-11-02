@@ -4,6 +4,8 @@
 #include "SceneGraph.h"
 
 #include <QModelIndex>
+#include <QDataStream>
+#include <QMimeData>
 
 SceneTreeModel::SceneTreeModel(SceneTree *scene, QObject *parent)
 	: QAbstractItemModel(parent)
@@ -38,7 +40,7 @@ SceneTreeModel::SceneTreeModel(SceneTree *scene, QObject *parent)
 	prim->setName("sdBigSphere");
 	prim->setSource("vec2( sdSphere(       pos-vec3( 0.5,0.5, 0.5), 0.75 ), 3.0 )");
 
-
+	insertRows(0, 3, index(0, 0, QModelIndex()));
 	
 }
 
@@ -233,16 +235,53 @@ bool SceneTreeModel::moveRows(const QModelIndex &sourceParent, int sourceRow, in
 		return false;
 	}
 
-	beginMoveRows(sourceParent, sourceRow, sourceRow + count, destinationParent, destinationChild);
-	sourceTree->child(sourceRow);
+	if (!beginMoveRows(sourceParent, sourceRow, sourceRow + count, destinationParent, destinationChild))
+	{
+		return false;
+	}
+	DEBUG_LOG << "Move " << count << " items from " << sourceTree->internalPath() << " at " << sourceRow << " toward " << destinationTree->internalPath() << " at " << destinationChild;
 	for (size_t i = 0; i < count; ++i)
 	{
-		DEBUG_LOG << "Move " << count << " items from " << sourceTree->internalPath() << " at " << sourceRow << " toward " << destinationTree->internalPath() << " at " << destinationChild;
 		SceneTree * node = sourceTree->takeChild(sourceRow);
 		destinationTree->addChild(node, destinationChild);
 	}
+	// Qt default drag manager calls a clearOrRemove() in abstract item view that removes the moved items, so add mock ones where it will remove them.
+	for (size_t i = 0; i < count; ++i)
+	{
+		destinationTree->addChild(destinationChild);
+	}
 	endMoveRows();
 	return true;
+}
+
+QStringList SceneTreeModel::mimeTypes() const
+{
+	return QStringList() << itemArrayMimeType;
+}
+
+QMimeData *SceneTreeModel::mimeData(const QModelIndexList &indexes) const
+{
+	if (indexes.empty())
+	{
+		return 0;
+	}
+
+	// A bit painful..
+
+	QByteArray dataByteArray;
+	QDataStream dataStream(&dataByteArray, QIODevice::WriteOnly);
+	dataStream.writeRawData(reinterpret_cast<const char*>(&m_dataTree), sizeof(m_dataTree)); // First add root pointer to avoid copying around items between different instances of the tree
+	dataStream << indexes.size();
+	for (const QModelIndex & index : indexes)
+	{
+		dataStream << index.row() << index.column();
+		void *p = index.internalPointer();
+		dataStream.writeRawData(reinterpret_cast<const char*>(&p), sizeof(p));
+	}
+
+	QMimeData *mime = new QMimeData;
+	mime->setData(itemArrayMimeType, dataByteArray);
+	return mime;
 }
 
 bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
@@ -255,11 +294,43 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 			return false;
 		}
 
-		//tree->addChild
+		if (!data->hasFormat(itemArrayMimeType))
+		{
+			return false;
+		}
 
-		//return true;
+		QByteArray dataByteArray = data->data(itemArrayMimeType);
+		QDataStream dataStream(dataByteArray);
+		SceneTree* root;
+		dataStream.readRawData(reinterpret_cast<char*>(&root), sizeof(root));
+		if (reinterpret_cast<SceneTree*>(root) != m_dataTree)
+		{
+			ERR_LOG << "Trying to move nodes between distinct SceneTree instances [" << (void*)root << " != " << (void*)m_dataTree << "]";
+		}
+		int size;
+		dataStream >> size;
+		if (size <= 0)
+		{
+			WARN_LOG << "Trying to move an empty list of nodes";
+			return false; // Should not happen
+		}
+
+
+		// TODO: pack into ranges, here or in mimeData();
+		for (int i = 0; i < size; ++i)
+		{
+			int r, c;
+			void* p;
+			dataStream >> r >> c;
+			dataStream.readRawData(reinterpret_cast<char*>(&p), sizeof(p));
+			QModelIndex source = createIndex(r, c, p);
+			moveRows(source.parent(), source.row(), 1, parent, row);
+		}
+
+		return true;
 	}
-	return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
+	return false;
+	//return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
 }
 
 Qt::DropActions SceneTreeModel::supportedDropActions() const
