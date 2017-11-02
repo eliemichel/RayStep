@@ -39,9 +39,6 @@ SceneTreeModel::SceneTreeModel(SceneTree *scene, QObject *parent)
 	prim = dif->addChild<ScenePrimitiveNode>();
 	prim->setName("sdBigSphere");
 	prim->setSource("vec2( sdSphere(       pos-vec3( 0.5,0.5, 0.5), 0.75 ), 3.0 )");
-
-	insertRows(0, 3, index(0, 0, QModelIndex()));
-	
 }
 
 SceneTreeModel::~SceneTreeModel()
@@ -183,7 +180,7 @@ bool SceneTreeModel::insertRows(int row, int count, const QModelIndex &parent)
 		return false;
 	}
 
-	beginInsertRows(parent, row, row + count);
+	beginInsertRows(parent, row, row + count - 1);
 	DEBUG_LOG << "Insert " << count << " rows into " << tree->internalPath() << " at " << row;
 	for (size_t i = 0; i < count; ++i)
 	{
@@ -208,7 +205,7 @@ bool SceneTreeModel::removeRows(int row, int count, const QModelIndex &parent)
 		return false;
 	}
 
-	beginRemoveRows(parent, row, row + count);
+	beginRemoveRows(parent, row, row + count - 1);
 	DEBUG_LOG << "Remove " << count << " rows from " << tree->internalPath() << " at " << row;
 	for (size_t i = 0; i < count; ++i)
 	{
@@ -224,31 +221,30 @@ bool SceneTreeModel::moveRows(const QModelIndex &sourceParent, int sourceRow, in
 	SceneTree *destinationTree = sceneTreeAt(destinationParent);
 	if (!sourceTree || !destinationTree)
 	{
+		ERR_LOG << "Invalid source or destination item";
 		return false;
 	}
-	if (sourceRow < 0 || sourceRow + count >= sourceTree->childCount())
+	if (sourceRow < 0 || sourceRow + count - 1 >= sourceTree->childCount())
 	{
+		ERR_LOG << "Invalid source row [" << sourceRow << "] and/or count [" << count << "] for a child count of " << sourceTree->childCount();
 		return false;
 	}
-	if (destinationChild < 0 || destinationChild >= destinationTree->childCount())
+	if (destinationChild < 0 || destinationChild > destinationTree->childCount())
 	{
+		ERR_LOG << "Invalid destination row: " << destinationChild;
 		return false;
 	}
 
-	if (!beginMoveRows(sourceParent, sourceRow, sourceRow + count, destinationParent, destinationChild))
+	DEBUG_LOG << "Move " << count << " items from " << sourceTree->internalPath() << " at " << sourceRow << " toward " << destinationTree->internalPath() << " at " << destinationChild;
+	if (!beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild))
 	{
+		ERR_LOG << "Invalid move";
 		return false;
 	}
-	DEBUG_LOG << "Move " << count << " items from " << sourceTree->internalPath() << " at " << sourceRow << " toward " << destinationTree->internalPath() << " at " << destinationChild;
 	for (size_t i = 0; i < count; ++i)
 	{
 		SceneTree * node = sourceTree->takeChild(sourceRow);
 		destinationTree->addChild(node, destinationChild);
-	}
-	// Qt default drag manager calls a clearOrRemove() in abstract item view that removes the moved items, so add mock ones where it will remove them.
-	for (size_t i = 0; i < count; ++i)
-	{
-		destinationTree->addChild(destinationChild);
 	}
 	endMoveRows();
 	return true;
@@ -286,16 +282,24 @@ QMimeData *SceneTreeModel::mimeData(const QModelIndexList &indexes) const
 
 bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
-	if (action == Qt::MoveAction)
+	if (action == Qt::CopyAction)
 	{
+		DEBUG_LOG << "CopyAction";
 		SceneTree *tree = sceneTreeAt(parent);
 		if (!tree)
 		{
+			ERR_LOG << "Invalid drop parent";
 			return false;
+		}
+
+		if (row == -1)
+		{
+			row = tree->childCount();
 		}
 
 		if (!data->hasFormat(itemArrayMimeType))
 		{
+			ERR_LOG << "Invalid drop data: no field with format " << itemArrayMimeType;
 			return false;
 		}
 
@@ -306,6 +310,7 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 		if (reinterpret_cast<SceneTree*>(root) != m_dataTree)
 		{
 			ERR_LOG << "Trying to move nodes between distinct SceneTree instances [" << (void*)root << " != " << (void*)m_dataTree << "]";
+			return false;
 		}
 		int size;
 		dataStream >> size;
@@ -315,6 +320,7 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 			return false; // Should not happen
 		}
 
+		DEBUG_LOG << "Dropping " << size << " nodes";
 
 		// TODO: pack into ranges, here or in mimeData();
 		for (int i = 0; i < size; ++i)
@@ -324,7 +330,14 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 			dataStream >> r >> c;
 			dataStream.readRawData(reinterpret_cast<char*>(&p), sizeof(p));
 			QModelIndex source = createIndex(r, c, p);
-			moveRows(source.parent(), source.row(), 1, parent, row);
+			if (!moveRows(source.parent(), source.row(), 1, parent, row))
+			{
+				DEBUG_LOG << "pb with item #" << i;
+				DEBUG_LOG << source.row() << ", " << source.column() << ", " << source.internalPointer();
+				DEBUG_LOG << parent.row() << ", " << parent.column() << ", " << parent.internalPointer();
+				DEBUG_LOG << "childCount: " << sceneTreeAt(parent)->childCount();
+				return false;
+			}
 		}
 
 		return true;
@@ -335,5 +348,5 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 
 Qt::DropActions SceneTreeModel::supportedDropActions() const
 {
-	return Qt::MoveAction;
+	return Qt::CopyAction;
 }
