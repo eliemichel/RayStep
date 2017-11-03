@@ -19,6 +19,9 @@ TextWindow::TextWindow(QWidget *parent)
 	ui->outliner->setModel(m_model);
 	ui->outliner->expandAll();
 
+	ui->properties->setModel(m_model);
+	ui->properties->setSelectionModel(ui->outliner->selectionModel());
+
 	connect(ui->submitButton, SIGNAL(clicked()), this, SIGNAL(submitted()));
 }
 

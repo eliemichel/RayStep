@@ -45,7 +45,7 @@ int NodePropertiesView::verticalOffset() const
 
 bool NodePropertiesView::isIndexHidden(const QModelIndex &index) const
 {
-	index != currentIndex();
+	return index != currentIndex();
 }
 
 QModelIndex NodePropertiesView::moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers)

@@ -36,6 +36,9 @@ public:
 	bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 	Qt::DropActions supportedDropActions() const override;
 
+	// Non-Qt-MVC accessors
+	QString nameAt(const QModelIndex & index);
+
 private:
 	SceneTree *sceneTreeAt(const QModelIndex &index) const;
 

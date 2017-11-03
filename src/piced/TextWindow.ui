@@ -43,6 +43,9 @@
     </widget>
    </item>
    <item>
+    <widget class="NodeProperties" name="properties" native="true"/>
+   </item>
+   <item>
     <widget class="QPlainTextEdit" name="shaderEdit">
      <property name="lineWrapMode">
       <enum>QPlainTextEdit::NoWrap</enum>
@@ -58,6 +61,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>NodeProperties</class>
+   <extends>QWidget</extends>
+   <header>NodeProperties.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

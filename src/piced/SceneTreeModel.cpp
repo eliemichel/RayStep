@@ -46,21 +46,6 @@ SceneTreeModel::~SceneTreeModel()
 
 }
 
-bool SceneTreeModel::isRoot(const QModelIndex &index)
-{
-	return !index.isValid();
-}
-
-SceneTree *SceneTreeModel::sceneTreeAt(const QModelIndex &index) const
-{
-	if (isRoot(index))
-	{
-		return m_dataTree;
-	}
-	//DEBUG_LOG << "Index(" << index.row() << ", " << index.column() << ", " << index.internalPointer() << ")";
-	return static_cast<SceneTree*>(index.internalPointer());
-}
-
 QModelIndex SceneTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
 	SceneTree *tree = sceneTreeAt(parent);
@@ -294,7 +279,7 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 
 		if (row == -1)
 		{
-			row = tree->childCount();
+			row = static_cast<int>(tree->childCount());
 		}
 
 		if (!data->hasFormat(itemArrayMimeType))
@@ -338,10 +323,6 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 			QModelIndex source = createIndex(r, c, p);
 			if (!moveRows(source.parent(), source.row(), 1, parent, row))
 			{
-				DEBUG_LOG << "pb with item #" << i;
-				DEBUG_LOG << source.row() << ", " << source.column() << ", " << source.internalPointer();
-				DEBUG_LOG << parent.row() << ", " << parent.column() << ", " << parent.internalPointer();
-				DEBUG_LOG << "childCount: " << sceneTreeAt(parent)->childCount();
 				return false;
 			}
 		}
@@ -355,4 +336,30 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 Qt::DropActions SceneTreeModel::supportedDropActions() const
 {
 	return Qt::CopyAction;
+}
+
+QString SceneTreeModel::nameAt(const QModelIndex & index)
+{
+	SceneTree *tree = sceneTreeAt(index);
+	if (!tree)
+	{
+		return QString();
+	}
+
+	return QString::fromStdString(tree->name());
+}
+
+bool SceneTreeModel::isRoot(const QModelIndex &index)
+{
+	return !index.isValid();
+}
+
+SceneTree *SceneTreeModel::sceneTreeAt(const QModelIndex &index) const
+{
+	if (isRoot(index))
+	{
+		return m_dataTree;
+	}
+	//DEBUG_LOG << "Index(" << index.row() << ", " << index.column() << ", " << index.internalPointer() << ")";
+	return static_cast<SceneTree*>(index.internalPointer());
 }
