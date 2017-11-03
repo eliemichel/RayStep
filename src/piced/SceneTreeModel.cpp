@@ -316,8 +316,14 @@ bool SceneTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, 
 		dataStream >> size;
 		if (size <= 0)
 		{
-			WARN_LOG << "Trying to move an empty list of nodes";
+			ERR_LOG << "Trying to move an empty list of nodes";
 			return false; // Should not happen
+		}
+
+		if (tree->childCount() + size > tree->maxChildren())
+		{
+			WARN_LOG << "Cannot drop more items than " << tree->maxChildren();
+			return false;
 		}
 
 		DEBUG_LOG << "Dropping " << size << " nodes";

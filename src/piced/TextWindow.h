@@ -1,4 +1,5 @@
-#pragma once
+#ifndef H_TEXTWINDOW
+#define H_TEXTWINDOW
 
 #include <QWidget>
 
@@ -32,3 +33,4 @@ private:
 	SceneTreeModel *m_model;
 };
 
+#endif // H_TEXTWINDOW

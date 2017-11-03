@@ -111,7 +111,7 @@ int SceneOperationNode::maxChildren() const
 	case UnionOp:
 		return -1;
 	case DifferenceOp:
-		return 2;
+		return -1;  // or 2?
 	case IntersectionOp:
 		return -1;
 	default:
