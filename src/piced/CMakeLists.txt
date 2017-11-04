@@ -31,11 +31,6 @@ add_executable(
 	SceneTreeModel.cpp
 	SceneGraph.h
 	SceneGraph.cpp
-	NodePropertiesView.h
-	NodePropertiesView.cpp
-	NodeProperties.h
-	NodeProperties.ui
-	NodeProperties.cpp
 	NodePropertiesModel.h
 	NodePropertiesModel.cpp
 

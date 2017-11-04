@@ -68,7 +68,7 @@ int NodePropertiesModel::columnCount(const QModelIndex &parent) const
 
 QVariant NodePropertiesModel::data(const QModelIndex &index, int role) const
 {
-	if (role != Qt::DisplayRole)
+	if (role != Qt::DisplayRole && role != Qt::EditRole)
 	{
 		return QVariant();
 	}
@@ -78,13 +78,54 @@ QVariant NodePropertiesModel::data(const QModelIndex &index, int role) const
 	const QModelIndex & currentColumn = sourceModel()->index(current.row(), sourceColumn, current.parent());
 	switch (index.column())
 	{
-	case 0: // labels
+	case LabelColumn:
 		return sourceModel()->data(currentColumn, SceneTreeModel::PropertyNameRole);
-	case 1: // values
+	case ValueColumn:
 		return sourceModel()->data(currentColumn);
 	default:
 		return QVariant();
 	}
+}
+
+QVariant NodePropertiesModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+	if (role != Qt::DisplayRole)
+	{
+		return QVariant();
+	}
+
+	switch (section)
+	{
+	case LabelColumn:
+		return "Property";
+	case ValueColumn:
+		return "Values";
+	default:
+		return QVariant();
+	}
+}
+
+Qt::ItemFlags NodePropertiesModel::flags(const QModelIndex &index) const
+{
+	Qt::ItemFlags f = QAbstractItemModel::flags(index);
+	if (index.isValid() && index.column() == ValueColumn)
+	{
+		f |= Qt::ItemIsEditable;
+	}
+	return f;
+}
+
+bool NodePropertiesModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+	if (!index.isValid() || index.column() != ValueColumn)
+	{
+		return false;
+	}
+
+	int sourceColumn = index.row() + 1; // 0 is reserved
+	const QModelIndex & current = sourceSelectionModel()->currentIndex();
+	const QModelIndex & currentColumn = sourceModel()->index(current.row(), sourceColumn, current.parent());
+	sourceModel()->setData(currentColumn, value);
 }
 
 

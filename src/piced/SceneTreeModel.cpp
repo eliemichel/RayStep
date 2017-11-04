@@ -202,12 +202,57 @@ bool SceneTreeModel::setData(const QModelIndex &index, const QVariant &value, in
 		{
 			return false;
 		}
-		if (!value.canConvert<QString>())
+
+		switch (index.column())
 		{
+		case 0:
+		case 1:
+			if (!value.canConvert<QString>())
+			{
+				return false;
+			}
+			// TODO avoid sibling with the same name
+			tree->setName(value.toString().toStdString());
+			break;
+		case 2:
+			// nope, don't let the user do that for now, since it is used for static_casts
+			return false;
+
+			if (!value.canConvert<int>())
+			{
+				return false;
+			}
+			tree->setType(static_cast<SceneTree::SceneNodeType>(value.toInt()));
+			break;
+		case 3:
+			switch (tree->type()) { // Yes, again..
+			case SceneTree::OperationNode:
+			{
+				if (!value.canConvert<int>())
+				{
+					return false;
+				}
+				auto op = static_cast<SceneOperationNode::OperationType>(value.toInt());
+				static_cast<SceneOperationNode*>(tree)->setOperation(op);
+				break;
+			}
+			case SceneTree::PrimitiveNode:
+			{
+				if (!value.canConvert<QString>())
+				{
+					return false;
+				}
+				std::string src = value.toString().toStdString();
+				static_cast<ScenePrimitiveNode*>(tree)->setSource(src);
+				break;
+			}
+			default:
+				return false;
+			}
+		default:
 			return false;
 		}
-		// TODO avoid sibling with the same name
-		tree->setName(value.toString().toStdString());
+
 		emit dataChanged(index, index);
 		return true;
 	}

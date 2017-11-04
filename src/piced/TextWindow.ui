@@ -43,7 +43,7 @@
     </widget>
    </item>
    <item>
-    <widget class="NodeProperties" name="properties" native="true"/>
+    <widget class="QTreeView" name="propertiesView"/>
    </item>
    <item>
     <widget class="QPlainTextEdit" name="shaderEdit">
@@ -51,9 +51,6 @@
       <enum>QPlainTextEdit::NoWrap</enum>
      </property>
     </widget>
-   </item>
-   <item>
-    <widget class="QTreeView" name="propertiesView"/>
    </item>
    <item>
     <widget class="QPushButton" name="submitButton">
@@ -64,14 +61,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>NodeProperties</class>
-   <extends>QWidget</extends>
-   <header>NodeProperties.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

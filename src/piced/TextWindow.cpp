@@ -20,9 +20,6 @@ TextWindow::TextWindow(QWidget *parent)
 	ui->outliner->setModel(m_model);
 	ui->outliner->expandAll();
 
-	ui->properties->setModel(m_model);
-	ui->properties->setSelectionModel(ui->outliner->selectionModel());
-
 	m_propertiesModel = new NodePropertiesModel();
 	m_propertiesModel->setSourceModel(m_model);
 	m_propertiesModel->setSourceSelectionModel(ui->outliner->selectionModel());

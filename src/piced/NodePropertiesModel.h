@@ -15,6 +15,12 @@ class NodePropertiesModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
+	enum Column {
+		LabelColumn,
+		ValueColumn
+	};
+
+public:
 	explicit NodePropertiesModel(QObject *parent = Q_NULLPTR);
 	~NodePropertiesModel();
 
@@ -31,6 +37,12 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+
+	// Editable items
+	Qt::ItemFlags flags(const QModelIndex &index) const override;
+	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 private slots:
 	void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles = QVector<int>());
