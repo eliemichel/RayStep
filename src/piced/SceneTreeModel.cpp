@@ -98,16 +98,44 @@ int SceneTreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 {
-	if (role == Qt::DisplayRole || role == Qt::EditRole)
+	SceneTree *tree = sceneTreeAt(index);
+	if (!tree)
 	{
-		SceneTree *tree = sceneTreeAt(index);
-		if (!tree)
+		return QVariant();
+	}
+
+	switch (role)
+	{
+	case Qt::DisplayRole:
+	case Qt::EditRole:
+		return QString::fromStdString(tree->name());
+	case PropertyNameRole:
+		switch (index.column())
 		{
+		case 0:
+			return "<system>";
+		case 1:
+			return "Name";
+		case 2:
+			return "Type";
+		default:
 			return QVariant();
 		}
-		return QString::fromStdString(tree->name());
+	case PropertyTypeRole:
+		switch (index.column())
+		{
+		case 0:
+			return NoType;
+		case 1:
+			return StringType;
+		case 2:
+			return EnumType;
+		default:
+			return QVariant();
+		}
+	default:
+		return QVariant();
 	}
-	return QVariant();
 }
 
 QVariant SceneTreeModel::headerData(int section, Qt::Orientation orientation, int role) const

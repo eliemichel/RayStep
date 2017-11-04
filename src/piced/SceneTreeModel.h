@@ -9,6 +9,20 @@ class SceneTreeModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
+	enum DataRole {
+		PropertyNameRole = Qt::UserRole, // Name of the property to which the current index column corresponds
+		PropertyTypeRole // Type of the property to which the current index column corresponds
+	};
+	enum PropertyType {
+		NoType,
+		StringType,
+		EnumType,
+		TextType,
+		IntType,
+		FloatType
+	};
+
+public:
 	explicit SceneTreeModel(SceneTree *scene, QObject *parent = Q_NULLPTR);
 	~SceneTreeModel();
 

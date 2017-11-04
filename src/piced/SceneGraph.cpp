@@ -2,6 +2,8 @@
 
 #include "Logger.h"
 
+// MUST NOT depend on Qt
+
 SceneTree::SceneTree(SceneTree *parent)
 	: m_parent(parent)
 	, m_name("<node>")

@@ -14,6 +14,9 @@
  *  - There is always one and only one SceneTree* pointing to a given SceneTree object among the m_children of all SceneTrees, except for the root one
  *  - tree->m_parent->m_children contains tree unless tree is root
  *  - If tree->m_type if FooNode, then tree can be safely static_casted into a SceneFooNode
+ *
+ * MUST NOT depend on Qt
+ *
  */
 class SceneTree
 {
