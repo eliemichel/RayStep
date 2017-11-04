@@ -1,4 +1,5 @@
-#pragma once
+#ifndef H_SCENETREEMODEL
+#define H_SCENETREEMODEL
 
 #include <QAbstractItemModel>
 
@@ -11,7 +12,8 @@ class SceneTreeModel : public QAbstractItemModel
 public:
 	enum DataRole {
 		PropertyNameRole = Qt::UserRole, // Name of the property to which the current index column corresponds
-		PropertyTypeRole // Type of the property to which the current index column corresponds
+		PropertyTypeRole, // Type of the property to which the current index column corresponds
+		NbPropertiesRole // Number of properties in the given node
 	};
 	enum PropertyType {
 		NoType,
@@ -63,3 +65,5 @@ private:
 private:
 	SceneTree *m_dataTree;
 };
+
+#endif // H_SCENETREEMODEL

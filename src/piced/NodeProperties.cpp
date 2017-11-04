@@ -10,6 +10,8 @@ NodeProperties::NodeProperties(QWidget *parent)
 {
 	ui->setupUi(this);
 
+	//ui->propertiesLayout->setWidget(1, QFormLayout::FieldRole, typeInput);
+
 	connect(ui->nameInput, SIGNAL(textChanged(const QString&)), this, SLOT(onNameChanged(const QString &)));
 }
 

@@ -108,7 +108,27 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 	{
 	case Qt::DisplayRole:
 	case Qt::EditRole:
-		return QString::fromStdString(tree->name());
+		switch (index.column())
+		{
+		case 0:
+		case 1:
+			return QString::fromStdString(tree->name());
+		case 2:
+			return tree->type();
+		case 3:
+			switch (tree->type()) { // Yes, again..
+			case SceneTree::OperationNode:
+				return static_cast<SceneOperationNode*>(tree)->operation();
+			case SceneTree::PrimitiveNode:
+				return QString::fromStdString(static_cast<ScenePrimitiveNode*>(tree)->source());
+			default:
+				return QVariant();
+			}
+			return QString::fromStdString(tree->name());
+		default:
+			return QVariant();
+		}
+		
 	case PropertyNameRole:
 		switch (index.column())
 		{
@@ -118,6 +138,8 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 			return "Name";
 		case 2:
 			return "Type";
+		case 3:
+			return "Source";
 		default:
 			return QVariant();
 		}
@@ -130,8 +152,19 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 			return StringType;
 		case 2:
 			return EnumType;
+		case 3:
+			return TextType;
 		default:
 			return QVariant();
+		}
+	case NbPropertiesRole:
+		switch (tree->type()) {
+		case SceneTree::OperationNode:
+			return 2;
+		case SceneTree::PrimitiveNode:
+			return 3;
+		default:
+			return 0;
 		}
 	default:
 		return QVariant();

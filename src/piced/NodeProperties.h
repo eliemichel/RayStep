@@ -11,6 +11,8 @@ namespace Ui {
 	class NodeProperties;
 }
 
+/// OBSOLETE -- TO BE REMOVED -- @see NodePropertiesModel
+
 class NodeProperties :
 	public QWidget
 {

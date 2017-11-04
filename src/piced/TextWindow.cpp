@@ -3,6 +3,7 @@
 
 #include "SceneGraph.h"
 #include "SceneTreeModel.h"
+#include "NodePropertiesModel.h"
 
 #include <QFile>
 #include <QMessageBox>
@@ -21,6 +22,12 @@ TextWindow::TextWindow(QWidget *parent)
 
 	ui->properties->setModel(m_model);
 	ui->properties->setSelectionModel(ui->outliner->selectionModel());
+
+	m_propertiesModel = new NodePropertiesModel();
+	m_propertiesModel->setSourceModel(m_model);
+	m_propertiesModel->setSourceSelectionModel(ui->outliner->selectionModel());
+	ui->propertiesView->setModel(m_propertiesModel);
+	ui->propertiesView->expandAll();
 
 	connect(ui->submitButton, SIGNAL(clicked()), this, SIGNAL(submitted()));
 }

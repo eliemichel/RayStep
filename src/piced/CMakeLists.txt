@@ -36,6 +36,8 @@ add_executable(
 	NodeProperties.h
 	NodeProperties.ui
 	NodeProperties.cpp
+	NodePropertiesModel.h
+	NodePropertiesModel.cpp
 
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp

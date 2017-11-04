@@ -5,6 +5,7 @@
 
 class SceneTree;
 class SceneTreeModel;
+class NodePropertiesModel;
 
 namespace Ui {
 	class TextWindow;
@@ -31,6 +32,7 @@ private:
 	Ui::TextWindow *ui;
 	SceneTree *m_scene;
 	SceneTreeModel *m_model;
+	NodePropertiesModel *m_propertiesModel;
 };
 
 #endif // H_TEXTWINDOW
