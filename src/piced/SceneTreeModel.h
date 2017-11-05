@@ -46,6 +46,8 @@ public:
 	bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 	bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count, const QModelIndex &destinationParent, int destinationChild) override;
 
+	bool insertExistingRow(SceneTree *tree, int row, const QModelIndex &parent);
+
 	// Drag and Drop
 	QStringList mimeTypes() const override;
 	QMimeData *mimeData(const QModelIndexList &indexes) const override;

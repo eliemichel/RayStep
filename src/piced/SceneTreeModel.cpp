@@ -341,6 +341,24 @@ bool SceneTreeModel::moveRows(const QModelIndex &sourceParent, int sourceRow, in
 	return true;
 }
 
+bool SceneTreeModel::insertExistingRow(SceneTree *node, int row, const QModelIndex &parent)
+{
+	SceneTree *tree = sceneTreeAt(parent);
+	if (!tree)
+	{
+		return false;
+	}
+	if (row < 0 || row > tree->childCount())
+	{
+		return false;
+	}
+
+	beginInsertRows(parent, row, row);
+	tree->addChild(node, row);
+	endInsertRows();
+	return true;
+}
+
 QStringList SceneTreeModel::mimeTypes() const
 {
 	return QStringList() << itemArrayMimeType;
