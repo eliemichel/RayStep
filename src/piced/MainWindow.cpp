@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-	connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(showOpenFileDialog()));
+	connect(ui->actionQuit, &QAction::triggered, this, &QWidget::close);
+	connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::showOpenFileDialog);
 
-	connect(ui->text, SIGNAL(submitted()), this, SLOT(updateShader()));
+	connect(ui->text, &TextWindow::submitted, this, &MainWindow::updateShader);
 
 	ui->splitter->setSizes(QList<int>() << 200 << 100);
 

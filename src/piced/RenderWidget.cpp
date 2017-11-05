@@ -15,7 +15,7 @@ RenderWidget::RenderWidget(QWidget *parent)
 	, m_time(0.0f)
 	, m_renderTimer(new QTimer(this))
 {
-	connect(m_renderTimer, SIGNAL(timeout()), this, SLOT(render()));
+	connect(m_renderTimer, &QTimer::timeout, this, &RenderWidget::render);
 	m_renderTimer->start(20);
 	qDebug() << "Yo OpenGL";
 

@@ -26,7 +26,7 @@ TextWindow::TextWindow(QWidget *parent)
 	ui->propertiesView->setModel(m_propertiesModel);
 	ui->propertiesView->expandAll();
 
-	connect(ui->submitButton, SIGNAL(clicked()), this, SIGNAL(submitted()));
+	connect(ui->submitButton, &QPushButton::clicked, this, &TextWindow::submitted);
 }
 
 TextWindow::~TextWindow()

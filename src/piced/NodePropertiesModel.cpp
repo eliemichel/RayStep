@@ -16,15 +16,13 @@ NodePropertiesModel::~NodePropertiesModel()
 void NodePropertiesModel::setSourceModel(SceneTreeModel *model)
 {
 	m_sourceModel = model;
-	connect(m_sourceModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&, const QVector<int>&)),
-		this, SLOT(onDataChanged(const QModelIndex&, const QModelIndex&, const QVector<int>&)));
+	connect(m_sourceModel, &QAbstractItemModel::dataChanged, this, &NodePropertiesModel::onDataChanged);
 }
 
 void NodePropertiesModel::setSourceSelectionModel(QItemSelectionModel *selectionModel)
 {
 	m_sourceSelectionModel = selectionModel;
-	connect(m_sourceSelectionModel, SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-		this, SLOT(onCurrentChanged(const QModelIndex&, const QModelIndex&)));
+	connect(m_sourceSelectionModel, &QItemSelectionModel::currentChanged, this, &NodePropertiesModel::onCurrentChanged);
 }
 
 
