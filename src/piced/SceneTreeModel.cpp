@@ -2,6 +2,7 @@
 
 #include "Logger.h"
 #include "SceneGraph.h"
+#include "SceneGraphIntrospector.h"
 
 #include <QModelIndex>
 #include <QDataStream>
@@ -103,46 +104,18 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 	{
 		return QVariant();
 	}
+	auto introspector = SceneTreeIntrospectorFactory::makeIntrospector(tree);
+	int propIndex = qMax(index.column() - 1, 0); // 0 is system, and so name
 
 	switch (role)
 	{
 	case Qt::DisplayRole:
 	case Qt::EditRole:
-		switch (index.column())
-		{
-		case 0:
-		case 1:
-			return QString::fromStdString(tree->name());
-		case 2:
-			return tree->type();
-		case 3:
-			switch (tree->type()) { // Yes, again..
-			case SceneTree::OperationNode:
-				return static_cast<SceneOperationNode*>(tree)->operation();
-			case SceneTree::PrimitiveNode:
-				return QString::fromStdString(static_cast<ScenePrimitiveNode*>(tree)->source());
-			default:
-				return QVariant();
-			}
-			return QString::fromStdString(tree->name());
-		default:
-			return QVariant();
-		}
+		return introspector->value(propIndex);
 		
 	case PropertyNameRole:
-		switch (index.column())
-		{
-		case 0:
-			return "<system>";
-		case 1:
-			return "Name";
-		case 2:
-			return "Type";
-		case 3:
-			return "Source";
-		default:
-			return QVariant();
-		}
+		return index.column() == 0 ? "<system>" : introspector->property(propIndex);
+	
 	case PropertyTypeRole:
 		switch (index.column())
 		{
@@ -158,14 +131,7 @@ QVariant SceneTreeModel::data(const QModelIndex &index, int role) const
 			return QVariant();
 		}
 	case NbPropertiesRole:
-		switch (tree->type()) {
-		case SceneTree::OperationNode:
-			return 2;
-		case SceneTree::PrimitiveNode:
-			return 3;
-		default:
-			return 0;
-		}
+		return introspector->nbProperties();
 	default:
 		return QVariant();
 	}
@@ -202,59 +168,18 @@ bool SceneTreeModel::setData(const QModelIndex &index, const QVariant &value, in
 		{
 			return false;
 		}
-
-		switch (index.column())
+		auto introspector = SceneTreeIntrospectorFactory::makeIntrospector(tree);
+		int propIndex = qMax(index.column() - 1, 0); // 0 is system, and so name
+		
+		if (introspector->setValue(propIndex, value))
 		{
-		case 0:
-		case 1:
-			if (!value.canConvert<QString>())
-			{
-				return false;
-			}
-			// TODO avoid sibling with the same name
-			tree->setName(value.toString().toStdString());
-			break;
-		case 2:
-			// nope, don't let the user do that for now, since it is used for static_casts
-			return false;
-
-			if (!value.canConvert<int>())
-			{
-				return false;
-			}
-			tree->setType(static_cast<SceneTree::SceneNodeType>(value.toInt()));
-			break;
-		case 3:
-			switch (tree->type()) { // Yes, again..
-			case SceneTree::OperationNode:
-			{
-				if (!value.canConvert<int>())
-				{
-					return false;
-				}
-				auto op = static_cast<SceneOperationNode::OperationType>(value.toInt());
-				static_cast<SceneOperationNode*>(tree)->setOperation(op);
-				break;
-			}
-			case SceneTree::PrimitiveNode:
-			{
-				if (!value.canConvert<QString>())
-				{
-					return false;
-				}
-				std::string src = value.toString().toStdString();
-				static_cast<ScenePrimitiveNode*>(tree)->setSource(src);
-				break;
-			}
-			default:
-				return false;
-			}
-		default:
+			emit dataChanged(index, index);
+			return true;
+		}
+		else
+		{
 			return false;
 		}
-
-		emit dataChanged(index, index);
-		return true;
 	}
 	return false;
 }

@@ -35,6 +35,8 @@ add_executable(
 	NodePropertiesModel.cpp
 	SceneTreeView.h
 	SceneTreeView.cpp
+	SceneGraphIntrospector.h
+	SceneGraphIntrospector.cpp
 
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp
