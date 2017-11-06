@@ -122,4 +122,6 @@ private:
 	std::string m_source;
 };
 
+// TODO: class SceneTransformNode
+
 #endif // H_SCENEGRAPH

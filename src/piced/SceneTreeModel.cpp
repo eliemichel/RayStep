@@ -32,14 +32,63 @@ SceneTreeModel::SceneTreeModel(SceneTree *scene, QObject *parent)
 	SceneOperationNode *dif = t->addChild<SceneOperationNode>();
 	dif->setName("Difference");
 	dif->setOperation(SceneOperationNode::DifferenceOp);
-	
 	prim = dif->addChild<ScenePrimitiveNode>();
 	prim->setName("sdBox2");
 	prim->setSource("vec2( sdBox(    pos-vec3( 0.0,0.25, 1.0), vec3(0.25) ), 15.0 )");
-
 	prim = dif->addChild<ScenePrimitiveNode>();
 	prim->setName("sdBigSphere");
 	prim->setSource("vec2( sdSphere(       pos-vec3( 0.5,0.5, 0.5), 0.75 ), 3.0 )");
+
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdTorus");
+	prim->setSource("vec2( sdTorus(     pos-vec3( 0.0,0.25, 1.0), vec2(0.20,0.05) ), 25.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdCapsule");
+	prim->setSource("vec2( sdCapsule(   pos,vec3(-1.3,0.10,-0.1), vec3(-0.8,0.50,0.2), 0.1  ), 31.9 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdTriPrism");
+	prim->setSource("vec2( sdTriPrism(  pos-vec3(-1.0,0.25,-1.0), vec2(0.25,0.05) ),43.5 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdCylinder");
+	prim->setSource("vec2( sdCylinder(  pos-vec3( 1.0,0.30,-1.0), vec2(0.1,0.2) ), 8.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdCone");
+	prim->setSource("vec2( sdCone(      pos-vec3( 0.0,0.50,-1.0), vec3(0.8,0.6,0.3) ), 55.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdTorus82");
+	prim->setSource("vec2( sdTorus82(   pos-vec3( 0.0,0.25, 2.0), vec2(0.20,0.05) ),50.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdTorus88");
+	prim->setSource("vec2( sdTorus88(   pos-vec3(-1.0,0.25, 2.0), vec2(0.20,0.05) ),43.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdCylinder6");
+	prim->setSource("vec2( sdCylinder6( pos-vec3( 1.0,0.30, 2.0), vec2(0.1,0.2) ), 12.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdHexPrism");
+	prim->setSource("vec2( sdHexPrism(  pos-vec3(-1.0,0.20, 1.0), vec2(0.25,0.05) ),17.0 )");
+	prim = t->addChild<ScenePrimitiveNode>();
+	prim->setName("sdPryamid4");
+	prim->setSource("vec2( sdPryamid4(  pos-vec3(-1.0,0.15,-2.0), vec3(0.8,0.6,0.25) ),37.0 )");
+
+	dif = t->addChild<SceneOperationNode>();
+	dif->setName("Difference");
+	dif->setOperation(SceneOperationNode::DifferenceOp);
+	prim = dif->addChild<ScenePrimitiveNode>();
+	prim->setName("udRoundBox");
+	prim->setSource("vec2( udRoundBox(  pos-vec3(-2.0,0.2, 1.0), vec3(0.15),0.05), 13.0 )");
+	prim = dif->addChild<ScenePrimitiveNode>();
+	prim->setName("sdSphere");
+	prim->setSource("vec2( sdSphere(pos - vec3(-2.0, 0.2, 1.0), 0.25), 13.0 )");
+
+	dif = t->addChild<SceneOperationNode>();
+	dif->setName("Difference");
+	dif->setOperation(SceneOperationNode::DifferenceOp);
+	prim = dif->addChild<ScenePrimitiveNode>();
+	prim->setName("sdTorus82");
+	prim->setSource("vec2( sdTorus82(  pos-vec3(-2.0,0.2, 0.0), vec2(0.20,0.1)), 51.0 )");
+	prim = dif->addChild<ScenePrimitiveNode>();
+	prim->setName("sdCylinder");
+	prim->setSource("vec2( sdCylinder(opRep(vec3(atan(pos.x + 2.0, pos.z) / 6.2831, pos.y, 0.02 + 0.5*length(pos - vec3(-2.0, 0.2, 0.0))), vec3(0.05, 1.0, 0.05)), vec2(0.02, 0.6)), 51.0 )");
 }
 
 SceneTreeModel::~SceneTreeModel()

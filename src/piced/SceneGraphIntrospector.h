@@ -7,6 +7,7 @@
 #include <QVariant>
 
 #include <memory>
+#include <vector>
 
 /**
  * Introspectors are intermediate classes that proposes a unified interfaces to Scene node classes.
