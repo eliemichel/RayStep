@@ -156,7 +156,8 @@ void Actorio::render() const {
 	glBindVertexArray(0);
 }
 
-void Actorio::updateShader(std::string renderSnippet) {
+void Actorio::updateShader(std::string renderSnippet, std::string extraUniforms) {
 	m_shader.setSnippet("piced-scene", renderSnippet);
+	m_shader.setSnippet("piced-uniforms", extraUniforms);
 	reloadShaders();
 }

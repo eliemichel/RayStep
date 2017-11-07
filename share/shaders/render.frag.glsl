@@ -6,6 +6,8 @@ layout (location = 0) out vec4 color;
 #include "include/GameState-ubo.inc.glsl"
 #include "include/Camera-ubo.inc.glsl"
 
+#include "sys:piced-scene"
+
 vec2 iMouse = game.cameraPosition.xy;
 uniform sampler2D iChannel1;
 #include "include/templated-ray-marcher.inc.glsl"

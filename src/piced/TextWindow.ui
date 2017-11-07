@@ -53,6 +53,9 @@
     </widget>
    </item>
    <item>
+    <widget class="QTreeView" name="uniformsView"/>
+   </item>
+   <item>
     <widget class="QPushButton" name="submitButton">
      <property name="text">
       <string>Submit</string>

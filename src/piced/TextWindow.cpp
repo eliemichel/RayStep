@@ -4,6 +4,7 @@
 #include "SceneGraph.h"
 #include "SceneTreeModel.h"
 #include "NodePropertiesModel.h"
+#include "UniformsModel.h"
 
 #include <QFile>
 #include <QMessageBox>
@@ -25,6 +26,9 @@ TextWindow::TextWindow(QWidget *parent)
 	m_propertiesModel->setSourceSelectionModel(ui->outliner->selectionModel());
 	ui->propertiesView->setModel(m_propertiesModel);
 	ui->propertiesView->expandAll();
+
+	m_uniformsModel = new UniformsModel();
+	ui->uniformsView->setModel(m_uniformsModel);
 
 	connect(ui->submitButton, &QPushButton::clicked, this, &TextWindow::submitted);
 }
@@ -50,5 +54,9 @@ void TextWindow::load(const QString & filename)
 QString TextWindow::content() const
 {
 	return QString::fromStdString(m_scene->compileToGlsl("scene"));
-	//return ui->shaderEdit->toPlainText();
+}
+
+QString TextWindow::uniforms() const
+{
+	return ""; // TODO
 }

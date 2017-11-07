@@ -52,7 +52,7 @@ public:
 	void onMouseButton(int button, int action, int mods);
 	void onScroll(double xoffset, double yoffset);
 
-	void updateShader(std::string renderSnippet);
+	void updateShader(std::string renderSnippet, std::string extraUniforms);
 
 private:
 	void reloadShaders();

@@ -37,6 +37,8 @@ add_executable(
 	SceneTreeView.cpp
 	SceneGraphIntrospector.h
 	SceneGraphIntrospector.cpp
+	UniformsModel.h
+	UniformsModel.cpp
 
 	augen/ResourceManager.h
 	augen/ResourceManager.cpp

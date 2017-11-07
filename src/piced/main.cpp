@@ -6,6 +6,13 @@
 
 QString loadCss(const QString & filename);
 
+/*
+* Roadmap :
+* - Add uniforms
+* - Add transforms
+* - Add drag n drop primitives
+*/
+
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);

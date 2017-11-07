@@ -36,9 +36,10 @@ void MainWindow::showOpenFileDialog()
 
 void MainWindow::updateShader()
 {
-	qDebug() << "Update shader: " << ui->text->content();
 	Actorio *actorio = ui->viewport->actorio();
 	if (actorio) {
-		actorio->updateShader(ui->text->content().toStdString());
+		std::string content = ui->text->content().toStdString();
+		std::string uniforms = ui->text->uniforms().toStdString();
+		actorio->updateShader(content, uniforms);
 	}
 }
