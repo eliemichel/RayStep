@@ -116,6 +116,7 @@ bool UniformsModel::setData(const QModelIndex &index, const QVariant &value, int
 				return false;
 			}
 			m_uniforms[index.row()].value = value.toFloat();
+			valueChanged(m_uniforms[index.row()].name, value.toFloat());
 			return true;
 		default:
 			ERR_LOG << "Write to invalid column in uniforms model";
@@ -125,3 +126,12 @@ bool UniformsModel::setData(const QModelIndex &index, const QVariant &value, int
 	return false;
 }
 
+std::string UniformsModel::compileToGlsl() const
+{
+	std::ostringstream ss;
+	for (int i = 0 ; i < rowCount() ; ++i)
+	{
+		ss << "uniform float " << data(index(i, 0)).toString().toStdString() << " = " << data(index(i, 1)).toFloat() << ";";
+	}
+	return ss.str();
+}

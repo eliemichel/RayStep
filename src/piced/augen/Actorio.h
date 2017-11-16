@@ -54,6 +54,9 @@ public:
 
 	void updateShader(std::string renderSnippet, std::string extraUniforms);
 
+	// FOrward of Shader's setUniform. Maybe not a good design to keep this here but I add it temporarily to wire up uniform update behavior
+	void setUniform(const std::string & name, GLfloat value) const;
+
 private:
 	void reloadShaders();
 

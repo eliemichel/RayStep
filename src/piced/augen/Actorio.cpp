@@ -161,3 +161,8 @@ void Actorio::updateShader(std::string renderSnippet, std::string extraUniforms)
 	m_shader.setSnippet("piced-uniforms", extraUniforms);
 	reloadShaders();
 }
+
+void Actorio::setUniform(const std::string & name, GLfloat value) const {
+	m_shader.use();
+	m_shader.setUniform(name, value);
+}

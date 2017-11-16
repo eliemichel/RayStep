@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+/// TODO: support different types of uniforms
 class UniformsModel : public QAbstractItemModel
 {
 	Q_OBJECT
@@ -36,6 +37,11 @@ public:
 	// Editable items
 	Qt::ItemFlags flags(const QModelIndex &index) const override;
 	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+	std::string compileToGlsl() const;
+
+signals:
+	void valueChanged(std::string name, float value);
 
 private:
 	QList<Uniform> m_uniforms;

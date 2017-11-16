@@ -29,6 +29,8 @@ public:
 	QString content() const;
 	QString uniforms() const;
 
+	const UniformsModel *uniformsModel() const { return m_uniformsModel; }
+
 public slots:
 	void load(const QString & filename);
 

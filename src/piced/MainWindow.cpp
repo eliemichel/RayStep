@@ -2,6 +2,8 @@
 #include "ui_MainWindow.h"
 
 #include "augen/Actorio.h"
+#include "Logger.h"
+#include "UniformsModel.h"
 
 #include <QFileDialog>
 #include <QDebug>
@@ -16,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 	connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::showOpenFileDialog);
 
 	connect(ui->text, &TextWindow::submitted, this, &MainWindow::updateShader);
+	connect(ui->text->uniformsModel(), &UniformsModel::valueChanged, this, &MainWindow::updateUniform);
 
 	ui->splitter->setSizes(QList<int>() << 200 << 100);
 
@@ -40,6 +43,17 @@ void MainWindow::updateShader()
 	if (actorio) {
 		std::string content = ui->text->content().toStdString();
 		std::string uniforms = ui->text->uniforms().toStdString();
+		DEBUG_LOG << content;
 		actorio->updateShader(content, uniforms);
 	}
 }
+
+
+void MainWindow::updateUniform(std::string name, float value)
+{
+	Actorio *actorio = ui->viewport->actorio();
+	if (actorio) {
+		actorio->setUniform(name, value);
+	}
+}
+

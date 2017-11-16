@@ -58,5 +58,5 @@ QString TextWindow::content() const
 
 QString TextWindow::uniforms() const
 {
-	return ""; // TODO
+	return QString::fromStdString(m_uniformsModel->compileToGlsl());
 }

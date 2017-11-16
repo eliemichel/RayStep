@@ -18,6 +18,7 @@ public:
 private slots:
 	void showOpenFileDialog();
 	void updateShader();
+	void updateUniform(std::string name, float value);
 
 private:
 	Ui::MainWindow *ui;
