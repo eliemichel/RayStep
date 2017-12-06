@@ -10,17 +10,18 @@ Camera::Camera()
 	: m_sensitivity(0.003f)
 	, m_panningSensitivity(0.01f)
 	, m_zoomSensitivity(0.001f)
+	, m_viewportWidth(640.f)
+	, m_viewportHeight(480.f)
 	, m_viewMatrix(1.f)
 	, m_zoom(5.f)
 	, m_center(0.f)
 {
 	m_quat = glm::quat(sqrt(2.f) / 2.f, -sqrt(2.f) / 2.f, 0.f, 0.f) * glm::quat(0.f, 0.f, 0.f, 1.f);
-	m_perspectiveMatrix = glm::perspective(45.f, 640.f / 480.f, 0.1f, 100.f);
 
 	glCreateBuffers(1, &m_ubo);
 	glNamedBufferData(m_ubo, sizeof(m_viewMatrix) + sizeof(m_perspectiveMatrix), NULL, GL_DYNAMIC_DRAW);
 	updateCameraViewMatrix();
-	glNamedBufferSubData(m_ubo, sizeof(m_viewMatrix), sizeof(m_perspectiveMatrix), glm::value_ptr(m_perspectiveMatrix));
+	updateCameraProjectionMatrix();
 }
 
 Camera::~Camera()
@@ -62,9 +63,23 @@ void Camera::mouseScroll(float dx, float dy)
 	updateCameraViewMatrix();
 }
 
+void Camera::viewportResize(float w, float h)
+{
+	m_viewportWidth = w;
+	m_viewportHeight = h;
+	updateCameraProjectionMatrix();
+}
+
 void Camera::updateCameraViewMatrix()
 {
 	m_viewMatrix = glm::translate(glm::vec3(0.f, 0.f, -m_zoom)) * mat4_cast(m_quat) * glm::translate(m_center);
 
-	glNamedBufferData(m_ubo, sizeof(m_viewMatrix), glm::value_ptr(m_viewMatrix), GL_DYNAMIC_DRAW);
+	glNamedBufferSubData(m_ubo, 0, sizeof(m_viewMatrix), glm::value_ptr(m_viewMatrix));
+}
+
+void Camera::updateCameraProjectionMatrix()
+{
+	m_perspectiveMatrix = glm::perspective(45.f, m_viewportWidth / m_viewportHeight, 0.1f, 100.f);
+
+	glNamedBufferSubData(m_ubo, sizeof(m_viewMatrix), sizeof(m_perspectiveMatrix), glm::value_ptr(m_perspectiveMatrix));
 }

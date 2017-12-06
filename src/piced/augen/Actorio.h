@@ -61,13 +61,14 @@ private:
 	void reloadShaders();
 
 private:
-	ShaderProgram m_shader, m_mouseMoveShader, m_mouseScrollShader, m_initShader, m_updateShader;
+	ShaderProgram m_raymarchingShader, m_manipulatorShader, m_mouseMoveShader, m_mouseScrollShader, m_initShader, m_updateShader;
 	GLuint m_texture;
-	GLuint m_vao;
+	GLuint m_raymarchingVao, m_manipulatorVao, m_manipulatorVbo;
 	GLuint m_gameStateSsbo;
 	AppInfo m_appInfo;
 	GLuint m_appInfoUbo;
 	Camera m_camera;
 	double m_oldX, m_oldY;
 	bool m_isCameraRotating, m_isCameraPanning;
+	int m_nbManipulatorIndices;
 };
