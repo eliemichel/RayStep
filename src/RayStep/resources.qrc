@@ -13,5 +13,7 @@
 	<file>../../share/images/ui-torus82.png</file>
 	<file>../../share/images/ui-torus88.png</file>
 	<file>../../share/images/ui-triangle.png</file>
+
+	<file alias="styles/default.css">../../share/styles/default.css</file>
 </qresource>
 </RCC>

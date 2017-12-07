@@ -1,3 +1,3 @@
 
 add_subdirectory(external)
-add_subdirectory(piced)
+add_subdirectory(RayStep)

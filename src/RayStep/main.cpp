@@ -16,7 +16,7 @@ QString loadCss(const QString & filename);
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	a.setStyleSheet(loadCss("E:/SourceCode/Piced/share/styles/default.css"));
+	a.setStyleSheet(loadCss(":styles/default.css"));
 
 	MainWindow w;
 	w.show();

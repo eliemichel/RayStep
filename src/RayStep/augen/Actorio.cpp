@@ -201,8 +201,8 @@ void Actorio::render() const {
 }
 
 void Actorio::updateShader(std::string renderSnippet, std::string extraUniforms) {
-	m_raymarchingShader.setSnippet("piced-scene", renderSnippet);
-	m_raymarchingShader.setSnippet("piced-uniforms", extraUniforms);
+	m_raymarchingShader.setSnippet("raystep-scene", renderSnippet);
+	m_raymarchingShader.setSnippet("raystep-uniforms", extraUniforms);
 	reloadShaders();
 }
 

@@ -8,7 +8,7 @@ if(Qt5Widgets_FOUND)
 endif()
 
 add_executable(
-	piced
+	RayStep
 	resources.qrc
 	ResourceManager.h
 	Logger.h
@@ -58,11 +58,11 @@ add_executable(
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(piced glad)
-target_link_libraries(piced glm)
-target_link_libraries(piced upng)
-target_link_libraries(piced json)
+target_link_libraries(RayStep glad)
+target_link_libraries(RayStep glm)
+target_link_libraries(RayStep upng)
+target_link_libraries(RayStep json)
 
-target_link_libraries_and_dll(piced Qt5::Core)
-target_link_libraries_and_dll(piced Qt5::Gui)
-target_link_libraries_and_dll(piced Qt5::Widgets)
+target_link_libraries_and_dll(RayStep Qt5::Core)
+target_link_libraries_and_dll(RayStep Qt5::Gui)
+target_link_libraries_and_dll(RayStep Qt5::Widgets)

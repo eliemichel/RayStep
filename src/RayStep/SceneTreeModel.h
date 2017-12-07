@@ -62,7 +62,7 @@ private:
 
 private:
 	static bool isRoot(const QModelIndex &indext);
-	constexpr static char* itemArrayMimeType = "application/x-piced-scene-tree-item-array";
+	constexpr static char* itemArrayMimeType = "application/x-raystep-scene-tree-item-array";
 
 private:
 	SceneTree *m_dataTree;
