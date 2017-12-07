@@ -1,6 +1,7 @@
 # Automatically generate moc files for Qt
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 find_package(Qt5Widgets)
 if(Qt5Widgets_FOUND)
 	message("Using Qt ${Qt5Widgets_VERSION} from ${Qt5Widgets_INCLUDE_DIRS}")
@@ -8,6 +9,7 @@ endif()
 
 add_executable(
 	piced
+	resources.qrc
 	ResourceManager.h
 	Logger.h
 	Logger.cpp

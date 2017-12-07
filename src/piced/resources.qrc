@@ -1,0 +1,17 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>../../share/images/ui-sphere.png</file>
+	<file>../../share/images/ui-box.png</file>
+    <file>../../share/images/ui-custom.png</file>
+	<file>../../share/images/ui-capsule.png</file>
+	<file>../../share/images/ui-cone.png</file>
+	<file>../../share/images/ui-cylinder.png</file>
+	<file>../../share/images/ui-cylinder8.png</file>
+	<file>../../share/images/ui-hexprism.png</file>
+	<file>../../share/images/ui-pyramid.png</file>
+	<file>../../share/images/ui-torus.png</file>
+	<file>../../share/images/ui-torus82.png</file>
+	<file>../../share/images/ui-torus88.png</file>
+	<file>../../share/images/ui-triangle.png</file>
+</qresource>
+</RCC>

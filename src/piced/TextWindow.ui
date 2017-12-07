@@ -46,19 +46,12 @@
     <widget class="QTreeView" name="propertiesView"/>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="shaderEdit">
-     <property name="lineWrapMode">
-      <enum>QPlainTextEdit::NoWrap</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QTreeView" name="uniformsView"/>
    </item>
    <item>
     <widget class="QPushButton" name="submitButton">
      <property name="text">
-      <string>Submit</string>
+      <string>Update</string>
      </property>
     </widget>
    </item>

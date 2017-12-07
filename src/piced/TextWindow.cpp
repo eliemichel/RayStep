@@ -46,7 +46,9 @@ void TextWindow::load(const QString & filename)
 
 	QTextStream in(&file);
 
-	ui->shaderEdit->setPlainText(in.readAll());
+	QString content = in.readAll();
+	Q_UNUSED(content)
+		// TODO: make an actual file format and loading
 
 	file.close();
 }

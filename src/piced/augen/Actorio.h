@@ -71,4 +71,5 @@ private:
 	double m_oldX, m_oldY;
 	bool m_isCameraRotating, m_isCameraPanning;
 	int m_nbManipulatorIndices;
+	bool m_renderManipulator; // TODO: add accessors
 };

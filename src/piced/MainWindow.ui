@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Piced</string>
+   <string>RayStep</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -38,9 +38,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="ViewportWindow" name="viewport" native="true">
-       <zorder>text</zorder>
-      </widget>
+      <widget class="ViewportWindow" name="viewport" native="true"/>
       <widget class="TextWindow" name="text" native="true"/>
      </widget>
     </item>

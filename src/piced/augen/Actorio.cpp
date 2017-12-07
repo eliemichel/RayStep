@@ -17,6 +17,7 @@ Actorio::Actorio()
 	, m_updateShader("update")
 	, m_isCameraRotating(false)
 	, m_isCameraPanning(false)
+	, m_renderManipulator(false)
 {
 	ShaderProgram::setRoot("E:/SourceCode/Piced/share/shaders");
 	
@@ -190,11 +191,13 @@ void Actorio::render() const {
 	glBindVertexArray(0);
 
 	// Render manipulators
-	m_manipulatorShader.use();
-	glBindVertexArray(m_manipulatorVao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_manipulatorVbo);
-	glDrawArrays(GL_LINE_STRIP, 0, m_nbManipulatorIndices);
-	glBindVertexArray(0);
+	if (m_renderManipulator) {
+		m_manipulatorShader.use();
+		glBindVertexArray(m_manipulatorVao);
+		glBindBuffer(GL_ARRAY_BUFFER, m_manipulatorVbo);
+		glDrawArrays(GL_LINE_STRIP, 0, m_nbManipulatorIndices);
+		glBindVertexArray(0);
+	}
 }
 
 void Actorio::updateShader(std::string renderSnippet, std::string extraUniforms) {
